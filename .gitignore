@@ -1,0 +1,16 @@
+node_modules
+.next
+.env
+.env.*
+!.env.example
+.vercel
+.DS_Store
+*.log
+*.pem
+coverage
+.vscode
+
+# Database lokal & artefak build
+prisma/*.db
+prisma/*.db-journal
+*.tsbuildinfo

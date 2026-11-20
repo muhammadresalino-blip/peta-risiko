@@ -1,0 +1,219 @@
+// PetaRisiko — skema database (SQLite untuk pengembangan; mudah dipindah ke PostgreSQL/Neon).
+// Catatan: SQLite tidak mendukung enum & Decimal Prisma, sehingga peran/status memakai String
+// dan nilai uang memakai Float (bulat rupiah). Lihat README untuk migrasi ke PostgreSQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  currency  String   @default("IDR")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  users       User[]
+  units       Unit[]
+  categories  RiskCategory[]
+  risks       Risk[]
+  appetites   RiskAppetite[]
+  settings    Setting[]
+  auditLogs   AuditLog[]
+  snapshots   RiskSnapshot[]
+  mappings    ImportMapping[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  orgId        String? // kosong hanya untuk PLATFORM_ADMIN
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String // PLATFORM_ADMIN | ADMIN | RISK_OWNER | REVIEWER | VIEWER
+  unitId       String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  org      Organization? @relation(fields: [orgId], references: [id])
+  unit     Unit?         @relation(fields: [unitId], references: [id])
+  owned    Risk[]        @relation("RiskOwner")
+  reviews  RiskReview[]
+
+  @@index([orgId])
+}
+
+model Unit {
+  id    String @id @default(cuid())
+  orgId String
+  name  String
+  kind  String // HEAD_OFFICE | BRANCH
+
+  org   Organization @relation(fields: [orgId], references: [id])
+  users User[]
+  risks Risk[]
+
+  @@unique([orgId, name])
+}
+
+model RiskCategory {
+  id    String @id @default(cuid())
+  orgId String
+  name  String
+
+  org Organization @relation(fields: [orgId], references: [id])
+
+  @@unique([orgId, name])
+}
+
+model Risk {
+  id       String  @id @default(cuid())
+  orgId    String
+  code     String
+  status   String  @default("DRAFT") // DRAFT | SUBMITTED | ACTIVE | RETIRED
+  type     String // THREAT | OPPORTUNITY
+  category String
+  unitId   String
+  goal     String
+  identifiedAt DateTime
+  description  String
+  rootCause    String
+  indicator    String
+  existingControl String
+  qualitativeImpact String
+
+  // inherent
+  p               Int
+  i               Int
+  score           Int
+  level           String
+  probPct         Float
+  financialImpact Float
+  netValue        Float
+
+  // pemilik
+  ownerId    String
+  ownerTitle String
+
+  // penanganan
+  strategy      String // AVOID | TRANSFER | MITIGATE | ACCEPT | EXPLOIT | SHARE | ENHANCE
+  treatment     String
+  treatmentCost Float   @default(0)
+  actionsDone   String?
+
+  // residual
+  rp               Int
+  ri               Int
+  scoreRes         Int
+  levelRes         String
+  probPctRes       Float
+  financialImpactRes Float
+  netValueRes      Float
+
+  aboveAppetite Boolean @default(false)
+  nextReviewAt  DateTime?
+  version       Int      @default(1)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  org     Organization @relation(fields: [orgId], references: [id])
+  unit    Unit         @relation(fields: [unitId], references: [id])
+  owner   User         @relation("RiskOwner", fields: [ownerId], references: [id])
+  reviews RiskReview[]
+  snaps   RiskSnapshot[]
+
+  @@unique([orgId, code])
+  @@index([orgId, status])
+  @@index([orgId, unitId])
+}
+
+model RiskReview {
+  id         String   @id @default(cuid())
+  riskId     String
+  reviewerId String
+  reviewedAt DateTime @default(now())
+  note       String
+  rpAfter    Int
+  riAfter    Int
+
+  risk     Risk @relation(fields: [riskId], references: [id], onDelete: Cascade)
+  reviewer User @relation(fields: [reviewerId], references: [id])
+
+  @@index([riskId])
+}
+
+model RiskAppetite {
+  id       String  @id @default(cuid())
+  orgId    String
+  category String
+  unitId   String? // null = berlaku untuk semua unit
+  maxScore Int // batas skor residual yang dapat diterima
+  note     String?
+
+  org Organization @relation(fields: [orgId], references: [id])
+
+  @@unique([orgId, category, unitId])
+}
+
+model Setting {
+  orgId String
+  key   String // btr, totalRevenue, probPct, levelThresholds
+  value String // JSON
+
+  org Organization @relation(fields: [orgId], references: [id])
+
+  @@id([orgId, key])
+}
+
+model AuditLog {
+  id       String   @id @default(cuid())
+  orgId    String
+  actorId  String
+  entity   String
+  entityId String
+  action   String // CREATE | UPDATE | DELETE | APPROVE | REJECT | SUBMIT | RETIRE | IMPORT | RECALCULATE
+  before   String?
+  after    String?
+  ip       String?
+  at       DateTime @default(now())
+
+  org Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, entity, entityId])
+  @@index([orgId, at])
+}
+
+model RiskSnapshot {
+  id         String  @id @default(cuid())
+  orgId      String
+  riskId     String
+  period     String // contoh: 2026-11
+  score      Int
+  level      String
+  scoreRes   Int
+  levelRes   String
+  netValue   Float
+  netValueRes Float
+
+  org  Organization @relation(fields: [orgId], references: [id])
+  risk Risk         @relation(fields: [riskId], references: [id], onDelete: Cascade)
+
+  @@unique([riskId, period])
+}
+
+model ImportMapping {
+  id      String @id @default(cuid())
+  orgId   String
+  name    String
+  columns String // JSON: { "Kode Risiko": "code", "Probabilitas": "p", ... }
+
+  org Organization @relation(fields: [orgId], references: [id])
+
+  @@unique([orgId, name])
+}
