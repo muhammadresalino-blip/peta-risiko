@@ -27,6 +27,22 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: process.cwd(),
   // Keamanan: header tambahan untuk produksi
   async headers() {
+    const isDev = process.env.NODE_ENV !== 'production';
+    // Next.js menyisipkan script bootstrap inline; tanpa 'unsafe-inline' form
+    // tidak ter-hidrasi. Mode dev juga memerlukan 'unsafe-eval' dan koneksi HMR.
+    const csp = [
+      "default-src 'self'",
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "img-src 'self' data: blob: https:",
+      `connect-src 'self' https://fonts.gstatic.com${isDev ? ' ws: wss:' : ''}`,
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'self'",
+    ].join('; ');
+
     return [
       // Header keamanan berlaku untuk semua rute
       {
@@ -36,36 +52,7 @@ const nextConfig: NextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self'",
-              "style-src 'self' 'unsafe-inline'",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' https:",
-              "connect-src 'self' https://fonts.gstatic.com",
-            ].join('; '),
-          },
-        ],
-      },
-      // Cookie Secure & SameSite untuk endpoint login (produksi)
-      {
-        source: '/login',
-        headers: [
-          {
-            key: 'Set-Cookie',
-            value: process.env.NODE_ENV === 'production' ? 'Secure; SameSite=Strict' : 'SameSite=Strict',
-          },
-        ],
-      },
-      {
-        source: '/api/v1/auth/login',
-        headers: [
-          {
-            key: 'Set-Cookie',
-            value: process.env.NODE_ENV === 'production' ? 'Secure; SameSite=Strict' : 'SameSite=Strict',
-          },
+          { key: 'Content-Security-Policy', value: csp },
         ],
       },
     ];

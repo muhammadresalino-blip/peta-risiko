@@ -1,11 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { ArrowRight, AlertCircle } from 'lucide-react';
 
 export function LoginForm() {
-  const router = useRouter();
   const [email, setEmail] = useState('admin@petarisiko.local');
   const [password, setPassword] = useState('Admin12345!');
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +24,10 @@ export function LoginForm() {
         setError(json?.error?.message ?? 'Gagal masuk.');
         return;
       }
-      router.replace('/dashboard');
-      router.refresh();
+      // Navigasi penuh agar cookie sesi HttpOnly langsung dipakai server.
+      // router.replace + router.refresh dapat saling membatalkan di App Router.
+      window.location.assign('/dashboard');
+      return;
     } catch {
       setError('Tidak dapat menghubungi server.');
     } finally {
