@@ -2,7 +2,7 @@
 import { notFound } from 'next/navigation';
 import { requireUser } from '@/lib/session';
 import { prisma } from '@/lib/db';
-import { riskScope } from '@/lib/tenant';
+import { riskScope, unitFilter, NO_UNIT } from '@/lib/tenant';
 import { LEVEL_LABEL, type Level } from '@/lib/scoring';
 import { formatDate, formatDateTime, formatRupiah, STATUS_LABEL } from '@/lib/format';
 import { PrintButton } from '@/components/print-button';
@@ -16,12 +16,12 @@ export default async function PrintRegisterPage({
 }) {
   const user = await requireUser();
   const sp = await searchParams;
-  const unitId = sp.unitId ?? '';
+  const unitId = unitFilter(user, sp.unitId);
 
   let unitName = '';
-  if (unitId) {
+  if (unitId && unitId !== NO_UNIT) {
     const unit = await prisma.unit.findFirst({
-      where: { id: unitId, orgId: user.orgId ?? '__none__' },
+      where: { id: unitId, orgId: user.orgId ?? NO_UNIT },
       select: { name: true },
     });
     if (!unit) notFound();

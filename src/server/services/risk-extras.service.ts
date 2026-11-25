@@ -279,10 +279,12 @@ export async function deleteAttachment(actor: CurrentUser, id: string, ip?: stri
     );
   });
 
-  // Hapus berkas fisik; abaikan bila sudah tidak ada.
+  // Hapus berkas fisik; abaikan bila sudah tidak ada. Path harus tetap di folder uploads
+  // agar nilai path yang tidak wajar tidak bisa menghapus berkas lain di server.
   try {
-    const full = path.join(process.cwd(), 'public', existing.path.replace(/^\/+/, ''));
-    await unlink(full);
+    const uploadsRoot = path.resolve(process.cwd(), 'public', 'uploads') + path.sep;
+    const full = path.resolve(process.cwd(), 'public', existing.path.replace(/^\/+/, ''));
+    if (full.startsWith(uploadsRoot)) await unlink(full);
   } catch {
     /* noop */
   }

@@ -11,7 +11,7 @@ import {
   type Actor,
 } from '@/lib/rbac';
 import type { RiskInput } from '@/validators/risk';
-import { riskScope } from '@/lib/tenant';
+import { riskScope, unitFilter } from '@/lib/tenant';
 
 export interface RiskListParams {
   q?: string;
@@ -87,7 +87,8 @@ export async function listRisks(actor: Actor, params: RiskListParams) {
       ],
     });
   }
-  if (params.unit) where.unitId = params.unit;
+  const effectiveUnit = unitFilter(actor, params.unit);
+  if (effectiveUnit) where.unitId = effectiveUnit;
   if (params.category) where.category = params.category;
   if (params.level) and.push({ OR: [{ level: params.level }, { levelRes: params.level }] });
   if (params.status) where.status = params.status;
@@ -223,6 +224,19 @@ export async function updateRisk(actor: Actor, id: string, patch: Partial<RiskIn
     ri: patch.ri ?? existing.ri,
   };
   const values = await computeValues(merged as RiskInput, existing.orgId);
+  // Jangan percaya unitId/ownerId dari klien: harus milik organisasi yang sama.
+  if (patch.unitId !== undefined) {
+    if (actor.role === 'RISK_OWNER' && patch.unitId !== actor.unitId) {
+      throw new HttpError(403, 'FORBIDDEN', 'Risk Owner tidak boleh memindahkan risiko ke unit lain.');
+    }
+    const unit = await prisma.unit.findFirst({ where: { id: patch.unitId, orgId: existing.orgId } });
+    if (!unit) throw new HttpError(422, 'VALIDATION_ERROR', 'Unit kerja tidak dikenal.');
+  }
+  if (patch.ownerId !== undefined) {
+    const owner = await prisma.user.findFirst({ where: { id: patch.ownerId, orgId: existing.orgId } });
+    if (!owner) throw new HttpError(422, 'VALIDATION_ERROR', 'Pemilik risiko tidak dikenal.');
+  }
+
   const category = patch.category ?? existing.category;
   const unitId = patch.unitId ?? existing.unitId;
   const limit = await appetiteLimit(existing.orgId, category, unitId);

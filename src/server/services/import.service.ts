@@ -5,6 +5,7 @@ import { writeAudit } from '@/lib/audit';
 import { getSettings, toScoringConfig } from '@/lib/settings';
 import { evaluate, isAboveAppetite } from '@/lib/scoring';
 import { appetiteLimit, nextCode } from '@/server/services/risk.service';
+import { NO_UNIT } from '@/lib/tenant';
 
 export type ImportValue = string | number | boolean | null;
 export type ImportRow = Record<string, ImportValue>;
@@ -145,11 +146,14 @@ function buildRow(
   };
 }
 
-async function loadContext(orgId: string): Promise<Context> {
+async function loadContext(orgId: string, actor: Actor): Promise<Context> {
+  // Risk Owner hanya boleh mengimpor ke unitnya sendiri.
+  const unitWhere = actor.role === 'RISK_OWNER' ? { orgId, id: actor.unitId ?? NO_UNIT } : { orgId };
+  const userWhere = actor.role === 'RISK_OWNER' ? { orgId, unitId: actor.unitId ?? NO_UNIT } : { orgId };
   const [units, categories, users] = await Promise.all([
-    prisma.unit.findMany({ where: { orgId }, select: { id: true, name: true } }),
+    prisma.unit.findMany({ where: unitWhere, select: { id: true, name: true } }),
     prisma.riskCategory.findMany({ where: { orgId }, select: { name: true } }),
-    prisma.user.findMany({ where: { orgId }, select: { id: true, name: true, email: true } }),
+    prisma.user.findMany({ where: userWhere, select: { id: true, name: true, email: true } }),
   ]);
   return { orgId, units, categories, users };
 }
@@ -166,7 +170,7 @@ export async function previewImport(
   }
   if (rows.length > 1000) throw new HttpError(422, 'VALIDATION_ERROR', 'Maksimal 1.000 baris per impor.');
 
-  const ctx = await loadContext(actor.orgId);
+  const ctx = await loadContext(actor.orgId, actor);
   const cfg = toScoringConfig(await getSettings(actor.orgId));
   const existingCodes = new Set(
     (await prisma.risk.findMany({ where: { orgId: actor.orgId }, select: { code: true } })).map((r) => r.code),
@@ -229,7 +233,7 @@ export async function commitImport(
     throw new HttpError(403, 'FORBIDDEN', 'Anda tidak berhak mengimpor data.');
   }
   const orgId = actor.orgId;
-  const ctx = await loadContext(orgId);
+  const ctx = await loadContext(orgId, actor);
   const cfg = toScoringConfig(await getSettings(orgId));
 
   const built: {

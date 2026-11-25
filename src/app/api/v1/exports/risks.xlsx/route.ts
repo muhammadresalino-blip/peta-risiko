@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db';
 import { requireOrgUser } from '@/lib/session';
 import { can } from '@/lib/rbac';
-import { riskScope } from '@/lib/tenant';
+import { riskScope, unitFilter, NO_UNIT } from '@/lib/tenant';
 import { buildRiskInputWorkbook } from '@/lib/excel';
 import { fail, handle } from '@/lib/api';
 
@@ -10,9 +10,9 @@ export async function GET(req: Request) {
     const user = await requireOrgUser();
     if (!can(user, 'export.run')) return fail(403, 'FORBIDDEN', 'Peran Anda tidak berhak mengekspor data.');
 
-    const unitId = new URL(req.url).searchParams.get('unitId');
+    const unitId = unitFilter(user, new URL(req.url).searchParams.get('unitId'));
     let unitName = '';
-    if (unitId) {
+    if (unitId && unitId !== NO_UNIT) {
       const unit = await prisma.unit.findFirst({
         where: { id: unitId, orgId: user.orgId },
         select: { name: true },

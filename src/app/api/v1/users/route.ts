@@ -25,6 +25,10 @@ export async function POST(req: Request) {
     const user = await requireOrgUser();
     if (!can(user, 'user.manage')) return fail(403, 'FORBIDDEN', 'Hanya Admin yang boleh mengelola pengguna.');
     const input = userSchema.parse(await req.json());
+    if (input.unitId) {
+      const unit = await prisma.unit.findFirst({ where: { id: input.unitId, orgId: user.orgId }, select: { id: true } });
+      if (!unit) return fail(422, 'VALIDATION_ERROR', 'Unit kerja tidak dikenal.');
+    }
     const created = await prisma.user.create({
       data: {
         orgId: user.orgId,

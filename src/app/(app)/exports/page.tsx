@@ -1,5 +1,7 @@
 import { requireUser } from '@/lib/session';
 import { prisma } from '@/lib/db';
+import { riskScope, NO_UNIT } from '@/lib/tenant';
+import { seesAllUnits } from '@/lib/rbac';
 import { PageHeader } from '@/components/ui';
 import { ExportPanel } from '@/components/export-panel';
 
@@ -7,15 +9,18 @@ export const dynamic = 'force-dynamic';
 
 export default async function ExportsPage() {
   const user = await requireUser();
-  const orgId = user.orgId ?? '__none__';
+  const orgId = user.orgId ?? NO_UNIT;
+  const unitWhere = seesAllUnits(user)
+    ? { orgId }
+    : { orgId, id: user.unitId ?? NO_UNIT };
   const [grouped, units] = await Promise.all([
     prisma.risk.groupBy({
       by: ['unitId', 'status'],
-      where: { orgId },
+      where: riskScope(user),
       _count: { _all: true },
     }),
     prisma.unit.findMany({
-      where: { orgId },
+      where: unitWhere,
       orderBy: { name: 'asc' },
       select: { id: true, name: true },
     }),

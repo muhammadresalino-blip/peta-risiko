@@ -43,5 +43,6 @@ export function paging(searchParams: URLSearchParams) {
 
 export function clientIp(req: Request): string | null {
   const fwd = req.headers.get('x-forwarded-for');
-  return fwd ? fwd.split(',')[0].trim() : null;
+  const raw = fwd ? fwd.split(',')[0]?.trim() : req.headers.get('x-real-ip')?.trim();
+  return raw ? raw.slice(0, 64) : null;
 }

@@ -3,7 +3,15 @@ import crypto from 'node:crypto';
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // 8 jam
 
 function secret(): string {
-  return process.env.AUTH_SECRET || 'petarisiko-dev-secret';
+  const value = process.env.AUTH_SECRET;
+  if (!value) {
+    // Jangan pernah memakai secret publik di produksi: sesi bisa dipalsukan.
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('AUTH_SECRET wajib diisi di produksi dengan nilai acak yang kuat.');
+    }
+    return 'petarisiko-dev-secret';
+  }
+  return value;
 }
 
 /* ---------------- Kata sandi ---------------- */

@@ -25,6 +25,13 @@ export async function PATCH(req: Request, { params }: Ctx) {
     if (!target) throw new HttpError(404, 'NOT_FOUND', 'Pengguna tidak ditemukan.');
 
     const input = patchSchema.parse(await req.json());
+    if (target.id === user.id && (input.isActive === false || (input.role !== undefined && input.role !== 'ADMIN'))) {
+      throw new HttpError(409, 'CONFLICT', 'Anda tidak dapat menonaktifkan atau menurunkan peran akun sendiri.');
+    }
+    if (input.unitId) {
+      const unit = await prisma.unit.findFirst({ where: { id: input.unitId, orgId: user.orgId }, select: { id: true } });
+      if (!unit) throw new HttpError(422, 'VALIDATION_ERROR', 'Unit kerja tidak dikenal.');
+    }
     const updated = await prisma.user.update({
       where: { id },
       data: {

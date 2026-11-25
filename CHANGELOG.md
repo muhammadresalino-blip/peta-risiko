@@ -13,13 +13,26 @@ Format repo commit ama. Versi akan dipinta seiring rilis.
 - fix: buat heatmap langsung menampilkan label teks tanpa hanya warna
 - fix: border tabel & baris tabel token border-line/60
 
+### Keamanan & Perbaikan (hasil audit)
+- fix: Risk Owner tidak bisa lagi melihat/mengekspor unit lain lewat query `?unit=`
+- fix: filter unit dan ekspor selalu dibatasi scope sesi (`unitFilter`)
+- fix: update risiko memvalidasi `unitId`/`ownerId` milik organisasi; Risk Owner tidak bisa memindahkan risiko antar-unit
+- fix: impor Excel untuk Risk Owner dibatasi ke unitnya sendiri
+- fix: `AUTH_SECRET` wajib diisi di produksi untuk mencegah pemalsuan sesi
+- fix: rate limit login dibersihkan berkala dan memakai fallback `x-real-ip`
+- fix: penghapusan lampiran divalidasi agar tetap di dalam folder `uploads`
+- fix: unit pengguna divalidasi saat dibuat/diubah; Admin tidak bisa menonaktifkan akun sendiri
+- fix: hapus rate limiter mati di `next.config.ts`; tambah header HSTS di produksi
+- test: tambah `tests/tenant.test.ts` untuk scope unit dan sentinel
+- chore: tambah `vitest.config.ts` (alias `@`)
+
 ### Dokumentasi
 - docs: tambahkan tutorial.md (22 bagian + demo workflow)
 - docs: tambahkan AGENTS.md (spesifikasi bisnis & desain token)
-- docs: tambahkan contribiying.md (perizinan maintainers)
+- docs: tambahkan CONTRIBUTING.md (panduan kontribusi)
 
 ### CI/CD
-- ci: add GitHub Actions workflow typecheck, lint, test
+- ci: GitHub Actions menjalankan typecheck, build, dan test
 
 ## [0.1.0] - 2026-01-XX
 
