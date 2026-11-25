@@ -38,6 +38,16 @@ npm run db:reset     # hapus database lokal, lalu db:push + db:seed
 
 ---
 
+## Dokumentasi
+
+- [`docs/tutorial.md`](docs/tutorial.md) — panduan pemakaian aplikasi langkah demi langkah.
+- [`docs/design-system.md`](docs/design-system.md) — token warna, tipografi, dan pola komponen.
+- [`docs/deployment.md`](docs/deployment.md) — deploy produksi (Vercel + Neon/PostgreSQL).
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — alur kontribusi dan standar kode.
+- [`CHANGELOG.md`](CHANGELOG.md) — riwayat perubahan.
+
+---
+
 ## Yang sudah diimplementasikan
 
 ### PRD & aturan bisnis
