@@ -72,3 +72,8 @@ export function levelRanges(c: ScoringConfig = DEFAULT_CONFIG): { level: Level; 
 export function isAboveAppetite(scoreResidual: number, maxScore: number): boolean {
   return scoreResidual > maxScore;
 }
+
+/** Aturan bisnis: skor residual tidak boleh melebihi skor inherent. */
+export function residualExceedsInherent(scoreResidual: number, scoreInherent: number): boolean {
+  return scoreResidual > scoreInherent;
+}

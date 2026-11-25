@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db';
 import { HttpError } from '@/lib/session';
 import { getSettings, toScoringConfig } from '@/lib/settings';
-import { evaluate, isAboveAppetite, type Level } from '@/lib/scoring';
+import { evaluate, isAboveAppetite, residualExceedsInherent, type Level } from '@/lib/scoring';
 import { writeAudit, type AuditAction } from '@/lib/audit';
 import {
   can,
@@ -198,7 +198,7 @@ export async function createRisk(actor: Actor, input: RiskInput, ip?: string | n
     return created;
   });
 
-  return { risk, warning: values.scoreRes > values.score ? 'Skor residual lebih tinggi dari inherent.' : null };
+  return { risk, warning: residualExceedsInherent(values.scoreRes, values.score) ? 'Skor residual lebih tinggi dari inherent.' : null };
 }
 
 function assertKnown(input: Record<string, unknown>, allowed: string[]) {

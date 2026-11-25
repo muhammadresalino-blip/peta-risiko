@@ -6,6 +6,7 @@ import {
   isAboveAppetite,
   level,
   netValue,
+  residualExceedsInherent,
   score,
 } from '../src/lib/scoring';
 
@@ -56,5 +57,11 @@ describe('scoring', () => {
     expect(isAboveAppetite(8, 6)).toBe(true);
     expect(isAboveAppetite(6, 6)).toBe(false);
     expect(isAboveAppetite(4, 6)).toBe(false);
+  });
+
+  it('menandai residual yang melebihi inherent', () => {
+    expect(residualExceedsInherent(16, 12)).toBe(true);
+    expect(residualExceedsInherent(12, 12)).toBe(false);
+    expect(residualExceedsInherent(6, 12)).toBe(false);
   });
 });

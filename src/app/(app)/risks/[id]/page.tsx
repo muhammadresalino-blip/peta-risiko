@@ -8,6 +8,7 @@ import { can, canEditRisk, canViewAuditOf } from '@/lib/rbac';
 import { getSettings } from '@/lib/settings';
 import { prisma } from '@/lib/db';
 import { formatDate, formatDateTime, formatRupiah, STATUS_LABEL, STRATEGY_LABEL } from '@/lib/format';
+import { residualExceedsInherent } from '@/lib/scoring';
 import { LevelBadge, PageHeader, SectionCard, StatusBadge } from '@/components/ui';
 import { RiskActions } from '@/components/risk-actions';
 import { RiskAttachments, RiskKRI, RiskMitigations } from '@/components/risk-extras';
@@ -87,7 +88,7 @@ export default async function RiskDetailPage({ params }: { params: Promise<{ id:
         }
       />
 
-      {risk.scoreRes > risk.score && (
+      {residualExceedsInherent(risk.scoreRes, risk.score) && (
         <div className="mb-6 flex items-start gap-2 rounded-lg bg-risk-medium/10 px-4 py-3 text-sm text-risk-medium ring-1 ring-risk-medium/20">
           <AlertTriangle size={16} className="mt-0.5 shrink-0" />
           <p>

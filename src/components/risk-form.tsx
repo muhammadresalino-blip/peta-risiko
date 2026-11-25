@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import { evaluate, type ScoringConfig } from '@/lib/scoring';
+import { evaluate, residualExceedsInherent, type ScoringConfig } from '@/lib/scoring';
 import { formatRupiah, STRATEGY_LABEL } from '@/lib/format';
 import { LevelBadge } from '@/components/ui';
 
@@ -404,7 +404,7 @@ export function RiskForm({ mode, defaults, units, categories, users, config }: P
                 <dd>{formatRupiah(residual.netValue, { compact: true })}</dd>
               </div>
             </dl>
-            {residual.score > inherent.score && (
+            {residualExceedsInherent(residual.score, inherent.score) && (
               <p className="mt-3 rounded-md bg-risk-medium/10 px-2 py-1.5 text-[11px] text-risk-medium ring-1 ring-risk-medium/20">
                 Skor residual lebih tinggi dari inherent. Periksa kembali penilaian.
               </p>

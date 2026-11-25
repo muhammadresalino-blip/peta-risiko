@@ -1,5 +1,6 @@
 import { requireOrgUser } from '@/lib/session';
 import { deleteRisk, getRisk, updateRisk } from '@/server/services/risk.service';
+import { residualExceedsInherent } from '@/lib/scoring';
 import { riskUpdateSchema } from '@/validators/risk';
 import { clientIp, handle, ok } from '@/lib/api';
 
@@ -21,7 +22,9 @@ export async function PATCH(req: Request, { params }: Ctx) {
     const risk = await updateRisk(user, id, patch, clientIp(req));
     return ok({
       ...risk,
-      warning: risk.scoreRes > risk.score ? 'Skor residual lebih tinggi dari inherent.' : null,
+      warning: residualExceedsInherent(risk.scoreRes, risk.score)
+        ? 'Skor residual lebih tinggi dari inherent.'
+        : null,
     });
   });
 }
