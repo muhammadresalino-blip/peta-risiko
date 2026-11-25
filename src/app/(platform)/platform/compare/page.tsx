@@ -81,14 +81,14 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
                 </thead>
                 <tbody>
                   {rows.map((org) => (
-                    <tr key={org.id} className="border-b border-slate-50 align-top last:border-0">
+                    <tr key={org.id} className="border-b border-line/60 align-top last:border-0">
                       <td className="td">
                         <p className="font-semibold text-ink">{org.name}</p>
                         <p className="text-xs text-muted">
                           <span className="font-mono">{org.slug}</span> · {org.currency} ·{' '}
                           {org.isActive ? 'aktif' : 'nonaktif'}
                         </p>
-                        <p className="text-xs text-[#98a2b3]">
+                        <p className="text-xs text-muted">
                           {org.users} pengguna · {org.units} unit · {org.total} risiko total
                         </p>
                       </td>
@@ -97,9 +97,9 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
                       <td className="td text-right tabular-nums text-muted">{org.submitted}</td>
                       <td className="td text-right tabular-nums">
                         {org.aboveAppetite > 0 ? (
-                          <span className="badge bg-rose-100 text-rose-700 ring-rose-200">{org.aboveAppetite}</span>
+                          <span className="badge bg-risk-extreme/10 text-risk-extreme ring-risk-extreme/20">{org.aboveAppetite}</span>
                         ) : (
-                          <span className="text-[#c8d3dd]">—</span>
+                          <span className="text-muted/50">—</span>
                         )}
                       </td>
                       <td className="td text-right tabular-nums">{org.avgScore ?? '—'}</td>
@@ -110,7 +110,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
                             <span
                               key={level}
                               title={LEVEL_LABEL[level]}
-                              className={`inline-flex items-center gap-1 rounded-full bg-[#f0f2f5] px-2 py-0.5 text-[11px] text-[#536174] ${
+                              className={`inline-flex items-center gap-1 rounded-full bg-mist px-2 py-0.5 text-[11px] text-muted ${
                                 org.byLevel[level] > 0 ? '' : 'opacity-40'
                               }`}
                             >
@@ -124,7 +124,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
                       <td className="td text-right">
                         <Link
                           href={`/platform/compare?orgIds=${org.id}`}
-                          className="text-xs font-semibold text-teal hover:text-[#117a76]"
+                          className="text-xs font-semibold text-teal hover:text-navy"
                         >
                           Fokus
                         </Link>

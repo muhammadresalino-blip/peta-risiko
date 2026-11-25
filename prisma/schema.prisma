@@ -127,10 +127,70 @@ model Risk {
   owner   User         @relation("RiskOwner", fields: [ownerId], references: [id])
   reviews RiskReview[]
   snaps   RiskSnapshot[]
+  mitigations RiskMitigation[]
+  kris        KRI[]
+  attachments Attachment[]
 
   @@unique([orgId, code])
   @@index([orgId, status])
   @@index([orgId, unitId])
+}
+
+model RiskMitigation {
+  id          String    @id @default(cuid())
+  riskId      String
+  description String
+  deadline    DateTime?
+  status      String    @default("TODO") // TODO | IN_PROGRESS | DONE
+  owner       String?
+  createdAt   DateTime  @default(now())
+
+  risk Risk @relation(fields: [riskId], references: [id], onDelete: Cascade)
+
+  @@index([riskId])
+}
+
+model KRI {
+  id        String   @id @default(cuid())
+  riskId    String
+  name      String
+  unit      String   // misal: Jam, Persen, Kejadian
+  threshold Float    // Batas peringatan
+  createdAt DateTime @default(now())
+
+  risk   Risk       @relation(fields: [riskId], references: [id], onDelete: Cascade)
+  values KRIValue[]
+
+  @@index([riskId])
+}
+
+model KRIValue {
+  id     String   @id @default(cuid())
+  kriId  String
+  period String   // YYYY-MM
+  value  Float
+  note   String?
+  at     DateTime @default(now())
+
+  kri KRI @relation(fields: [kriId], references: [id], onDelete: Cascade)
+
+  @@unique([kriId, period])
+}
+
+model Attachment {
+  id         String   @id @default(cuid())
+  riskId     String
+  reviewId   String?
+  name       String
+  mimeType   String
+  path       String
+  size       Int
+  uploadedAt DateTime @default(now())
+
+  risk   Risk        @relation(fields: [riskId], references: [id], onDelete: Cascade)
+  review RiskReview? @relation(fields: [reviewId], references: [id])
+
+  @@index([riskId])
 }
 
 model RiskReview {
@@ -142,11 +202,13 @@ model RiskReview {
   rpAfter    Int
   riAfter    Int
 
-  risk     Risk @relation(fields: [riskId], references: [id], onDelete: Cascade)
-  reviewer User @relation(fields: [reviewerId], references: [id])
+  risk        Risk         @relation(fields: [riskId], references: [id], onDelete: Cascade)
+  reviewer    User         @relation(fields: [reviewerId], references: [id])
+  attachments Attachment[]
 
   @@index([riskId])
 }
+
 
 model RiskAppetite {
   id       String  @id @default(cuid())

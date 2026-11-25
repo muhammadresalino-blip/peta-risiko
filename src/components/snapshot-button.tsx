@@ -32,10 +32,10 @@ export function SnapshotButton({ canCreate }: { canCreate: boolean }) {
   return (
     <div className="text-right">
       <button className="btn-secondary btn-sm" onClick={takeSnapshot} disabled={busy}>
-        {busy ? 'Menyimpanâ€¦' : 'Ambil snapshot'}
+        {busy ? 'Menyimpan…' : 'Ambil snapshot'}
       </button>
-      {message && <p className="mt-1 text-[11px] font-medium text-emerald-600">{message}</p>}
-      {error && <p className="mt-1 text-[11px] font-medium text-rose-600">{error}</p>}
+      {message && <p className="mt-1 text-[11px] font-medium text-risk-low">{message}</p>}
+      {error && <p className="mt-1 text-[11px] font-medium text-risk-extreme">{error}</p>}
     </div>
   );
 }

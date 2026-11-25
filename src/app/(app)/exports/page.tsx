@@ -52,7 +52,7 @@ export default async function ExportsPage() {
 
       <div className="card-pad mt-6">
         <h2 className="text-sm font-bold text-navy">Catatan pelaporan</h2>
-        <ul className="mt-2 space-y-1 text-sm text-[#536174]">
+        <ul className="mt-2 space-y-1 text-sm text-muted">
           <li>• Nilai rupiah dihitung dari BTR organisasi; nilai antarorganisasi tidak dibandingkan langsung.</li>
           <li>• Nilai bersih residual adalah eksposur yang diharapkan setelah penanganan.</li>
           <li>• Unduhan mengikuti hak akses: Risk Owner hanya menerima data unitnya.</li>

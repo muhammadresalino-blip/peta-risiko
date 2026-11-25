@@ -60,7 +60,7 @@ npm run db:reset     # hapus database lokal, lalu db:push + db:seed
 - **Login** dan sesi 8 jam.
 - **Dashboard**: jumlah risiko, nilai bersih inherent & residual, biaya penanganan, sebaran tingkat, rekap per unit, nilai bersih terbesar, daftar di atas appetite, **tren snapshot** (12 periode terakhir), tombol **ambil snapshot**, dan **daftar review jatuh tempo**.
 - **Register Risiko**: pencarian, filter unit/kategori/tingkat/status/appetite, pengurutan skor & nilai bersih, paginasi, ekspor Excel.
-- **Detail risiko**: dua panel skor, identifikasi, penanganan, kajian berkala, audit log, aksi sesuai peran.
+- **Detail risiko**: dua panel skor, identifikasi, penanganan, **rencana tindakan (mitigasi)**, **indikator risiko (KRI)**, **lampiran bukti**, kajian berkala, audit log, aksi sesuai peran.
 - **Form risiko**: 5 bagian, pratinjau skor langsung, validasi Zod di klien dan server.
 - **Heat Map 5 × 5** inherent/residual dengan kode risiko di tiap sel dan legenda berlabel teks (bukan hanya warna).
 - **Risk Appetite**: CRUD batas per kategori/unit + daftar risiko yang melampaui.
@@ -72,7 +72,7 @@ npm run db:reset     # hapus database lokal, lalu db:push + db:seed
 - **Audit Log** global.
 
 ### API (`/api/v1`)
-Sesuai bagian 5 dokumen: `auth/login|logout|me`, `risks` (GET/POST), `risks/:id` (GET/PATCH/DELETE), `risks/:id/submit|approve|reject|retire`, `risks/:id/reviews`, `risks/:id/audit`, `risks/appetite-gap`, `dashboard/summary|by-unit|heatmap|trend`, `appetites` (+`:id`), `settings` (+`recalculate`), `imports/risks` (`dryRun`, `mapping`, `mappingId`), `import-mappings` (GET/POST) + `:id` (PUT/DELETE), `exports/risks.xlsx` dan `exports/risk-register.xlsx` (`?unitId=`), `users` (+`:id`), `units` (+`:id`), `audit-logs`, `snapshots`, `organizations` (GET/POST) + `:id` (PATCH), `platform/compare`, `health`.
+Sesuai bagian 5 dokumen: `auth/login|logout|me`, `risks` (GET/POST), `risks/:id` (GET/PATCH/DELETE), `risks/:id/submit|approve|reject|retire`, `risks/:id/reviews`, `risks/:id/audit`, `risks/:id/mitigations` (+`:id`), `risks/:id/kris` (+`:id`, `:id/values`), `risks/:id/attachments` (+`:id`), `risks/appetite-gap`, `dashboard/summary|by-unit|heatmap|trend`, `appetites` (+`:id`), `settings` (+`recalculate`), `imports/risks` (`dryRun`, `mapping`, `mappingId`), `import-mappings` (GET/POST) + `:id` (PUT/DELETE), `exports/risks.xlsx` dan `exports/risk-register.xlsx` (`?unitId=`), `users` (+`:id`), `units` (+`:id`), `audit-logs`, `snapshots`, `organizations` (GET/POST) + `:id` (PATCH), `platform/compare`, `health`.
 
 Format: `{ "data": ..., "meta": ... }` dan error `{ "error": { "code", "message", "details" } }` dengan kode 400/401/403/404/409/422/429/500.
 
@@ -84,7 +84,7 @@ Format: `{ "data": ..., "meta": ... }` dan error `{ "error": { "code", "message"
 
 ### Keamanan
 - Hash kata sandi scrypt (salt acak, perbandingan timing-safe), cookie `HttpOnly`, `SameSite=Lax`, `Secure` di produksi.
-- Otorisasi di setiap endpoint; semua query lewat Prisma (parameterized); unggahan dibatasi tipe `.xlsx/.xlsm`, 5 MB, 1.000 baris.
+- Otorisasi di setiap endpoint; semua query lewat Prisma (parameterized); unggahan impor dibatasi `.xlsx/.xlsm` 5 MB/1.000 baris, unggahan lampiran dibatasi PDF/gambar/spreadsheet/DOCX 10 MB dan disimpan di `public/uploads/<orgId>` (tidak di-commit).
 - Rahasia hanya di environment variable (`.env` tidak di-commit).
 
 ---
@@ -93,7 +93,8 @@ Format: `{ "data": ..., "meta": ... }` dan error `{ "error": { "code", "message"
 
 ```
 prisma/schema.prisma      skema (Organization, User, Unit, Risk, RiskReview,
-                          RiskAppetite, Setting, AuditLog, RiskSnapshot, ImportMapping)
+                          RiskAppetite, Setting, AuditLog, RiskSnapshot, ImportMapping,
+                          RiskMitigation, KRI, KRIValue, Attachment)
 prisma/seed.ts            data demo Cakrawala Air
 src/app/(app)/...         halaman setelah login (organisasi)
 src/app/(platform)/...    halaman Platform Admin (organisasi, perbandingan)
@@ -117,3 +118,4 @@ docs/                     catatan pemetaan kolom Risk Input
 - Jadwal snapshot bulanan dan job hitung ulang belum dijalankan otomatis; tersedia endpoint manual (`POST /api/v1/snapshots`, `POST /api/v1/settings/recalculate`), tombol snapshot di Dashboard, dan tombol hitung ulang di halaman Pengaturan.
 - Sheet **Risk Input** asli tidak tersedia saat pengembangan (hanya dokumen PDF, yang menyebut “38 field” tanpa merinci nama kolomnya). Aplikasi mengekspor **31 kolom** yang terverifikasi dari model dan form; rincian serta 7 kolom yang belum terverifikasi ada di [`docs/pemetaan-kolom-risk-input.md`](docs/pemetaan-kolom-risk-input.md).
 - Notifikasi email/WhatsApp, SSO, multi-bahasa, mobile native, dan integrasi ke sistem keuangan berada di luar MVP sesuai dokumen.
+- Lampiran bukti disajikan sebagai berkas statis dari `public/uploads` dengan nama UUID; belum ada pemindaian antivirus, versi berkas, atau kontrol akses per-file.

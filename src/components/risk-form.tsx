@@ -116,7 +116,7 @@ export function RiskForm({ mode, defaults, units, categories, users, config }: P
   return (
     <form onSubmit={submit} className="space-y-6">
       {error && (
-        <div className="rounded-lg bg-rose-50 px-4 py-3 text-sm text-rose-700 ring-1 ring-rose-200">
+        <div className="rounded-lg bg-risk-extreme/10 px-4 py-3 text-sm text-risk-extreme ring-1 ring-risk-extreme/20">
           <p className="font-semibold">{error}</p>
           {details.length > 0 && (
             <ul className="mt-1 list-inside list-disc text-xs">
@@ -270,10 +270,10 @@ export function RiskForm({ mode, defaults, units, categories, users, config }: P
           <div className="rounded-xl border border-line bg-mist p-4 lg:col-span-2">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Pratinjau</p>
             <div className="mt-2 flex items-center justify-between">
-              <span className="text-2xl font-bold text-navy">{inherent.score}</span>
+              <span className="data-value text-2xl font-bold text-navy">{inherent.score}</span>
               <LevelBadge level={inherent.level} />
             </div>
-            <dl className="mt-3 space-y-1 text-xs text-[#536174]">
+            <dl className="mt-3 space-y-1 text-xs text-muted">
               <div className="flex justify-between">
                 <dt>Probabilitas</dt>
                 <dd>{Math.round(inherent.probPct * 100)}%</dd>
@@ -387,10 +387,10 @@ export function RiskForm({ mode, defaults, units, categories, users, config }: P
           <div className="rounded-xl border border-line bg-mist p-4 lg:col-span-2">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Pratinjau residual</p>
             <div className="mt-2 flex items-center justify-between">
-              <span className="text-2xl font-bold text-navy">{residual.score}</span>
+              <span className="data-value text-2xl font-bold text-navy">{residual.score}</span>
               <LevelBadge level={residual.level} />
             </div>
-            <dl className="mt-3 space-y-1 text-xs text-[#536174]">
+            <dl className="mt-3 space-y-1 text-xs text-muted">
               <div className="flex justify-between">
                 <dt>Probabilitas</dt>
                 <dd>{Math.round(residual.probPct * 100)}%</dd>
@@ -405,7 +405,7 @@ export function RiskForm({ mode, defaults, units, categories, users, config }: P
               </div>
             </dl>
             {residual.score > inherent.score && (
-              <p className="mt-3 rounded-md bg-amber-50 px-2 py-1.5 text-[11px] text-amber-800 ring-1 ring-amber-200">
+              <p className="mt-3 rounded-md bg-risk-medium/10 px-2 py-1.5 text-[11px] text-risk-medium ring-1 ring-risk-medium/20">
                 Skor residual lebih tinggi dari inherent. Periksa kembali penilaian.
               </p>
             )}

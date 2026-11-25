@@ -21,7 +21,7 @@ export default async function LoginPage() {
         </div>
 
         <div className="max-w-[520px]">
-          <p className="text-[11px] font-bold uppercase tracking-[2px] text-[#8dc8c1]">Risk management workspace</p>
+          <p className="text-[11px] font-bold uppercase tracking-[2px] text-teal-light">Risk management workspace</p>
           <h1 className="mt-4 font-display text-[clamp(34px,4.5vw,54px)] font-extrabold leading-[1.12] tracking-[-1.7px]">
             Pahami risiko.
             <br />
@@ -29,10 +29,10 @@ export default async function LoginPage() {
             <br />
             dengan lebih jelas.
           </h1>
-          <p className="mt-5 max-w-[420px] text-sm leading-[1.8] text-[#d4dee8]">
+          <p className="mt-5 max-w-[420px] text-sm leading-[1.8] text-white/80">
             Satu ruang kerja untuk mencatat, menilai, memantau, dan meninjau risiko organisasi.
           </p>
-          <ul className="mt-8 grid max-w-[420px] gap-3 text-[13px] text-[#c9d6e2]">
+          <ul className="mt-8 grid max-w-[420px] gap-3 text-[13px] text-white/75">
             {[
               'Skor inherent & residual dihitung server',
               'Alur persetujuan Draft → Diajukan → Aktif → Retired',
@@ -40,18 +40,18 @@ export default async function LoginPage() {
               'Impor Excel dengan validasi per baris',
             ].map((item) => (
               <li key={item} className="flex items-start gap-2.5">
-                <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#8dc8c1]" />
+                <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-teal-light" />
                 {item}
               </li>
             ))}
           </ul>
         </div>
 
-        <p className="text-[11px] text-[#afc0d0]">© 2026 PetaRisiko · Workspace organisasi</p>
+        <p className="text-[11px] text-white/50">© 2026 PetaRisiko · Workspace organisasi</p>
       </section>
 
       <section className="flex items-center justify-center bg-canvas px-5 py-12 sm:px-8">
-        <div className="w-full max-w-[390px] rounded-[14px] border border-line bg-white p-6 shadow-[0_12px_36px_#142d4e0a] sm:p-9">
+        <div className="w-full max-w-[390px] rounded-[14px] border border-line bg-white p-6 shadow-[var(--shadow-raised)] sm:p-9">
           <div className="mb-6 flex items-center gap-2.5 lg:hidden">
             <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-navy text-[13px] font-extrabold text-white">
               PR

@@ -109,7 +109,7 @@ export function SettingsForm({ initial }: { initial: Settings }) {
               {formatRupiah(form.btr)} = <strong>{pct.toFixed(2)}%</strong> dari total pendapatan.
             </p>
           </div>
-          <div className="rounded-lg bg-mist p-3 text-xs text-[#536174] ring-1 ring-line">
+          <div className="rounded-lg bg-mist p-3 text-xs text-muted ring-1 ring-line">
             Dampak finansial = (indeks dampak ÷ 5) × BTR. Indeks 4 berarti 80% dari BTR.
           </div>
         </div>
@@ -118,7 +118,7 @@ export function SettingsForm({ initial }: { initial: Settings }) {
           <h2 className="text-sm font-bold text-navy">Probabilitas per indeks</h2>
           {[1, 2, 3, 4, 5].map((n) => (
             <div key={n} className="flex items-center gap-3">
-              <span className="w-16 text-sm text-[#536174]">Indeks {n}</span>
+              <span className="w-16 text-sm text-muted">Indeks {n}</span>
               <input
                 type="number"
                 min={0}
@@ -132,7 +132,7 @@ export function SettingsForm({ initial }: { initial: Settings }) {
               <span className="text-sm text-muted">%</span>
             </div>
           ))}
-          <div className="rounded-lg bg-mist p-3 text-xs text-[#536174] ring-1 ring-line">
+          <div className="rounded-lg bg-mist p-3 text-xs text-muted ring-1 ring-line">
             Nilai bersih = probabilitas (%) × dampak finansial.
           </div>
         </div>
@@ -180,8 +180,8 @@ export function SettingsForm({ initial }: { initial: Settings }) {
         </p>
       </div>
 
-      {error && <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700 ring-1 ring-rose-200">{error}</p>}
-      {status && <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700 ring-1 ring-emerald-200">{status}</p>}
+      {error && <p className="rounded-lg bg-risk-extreme/10 px-3 py-2 text-sm text-risk-extreme ring-1 ring-risk-extreme/20">{error}</p>}
+      {status && <p className="rounded-lg bg-risk-low/10 px-3 py-2 text-sm text-risk-low ring-1 ring-risk-low/20">{status}</p>}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <button className="btn-secondary" onClick={recalculate} disabled={busy}>

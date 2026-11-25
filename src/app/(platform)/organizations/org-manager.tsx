@@ -85,9 +85,9 @@ export function OrgManager({ orgs }: { orgs: OrgRow[] }) {
   return (
     <div className="space-y-4">
       {notice && (
-        <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800 ring-1 ring-emerald-200">{notice}</p>
+        <p className="rounded-lg bg-risk-low/10 px-3 py-2 text-sm text-risk-low ring-1 ring-risk-low/20">{notice}</p>
       )}
-      {error && <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700 ring-1 ring-rose-200">{error}</p>}
+      {error && <p className="rounded-lg bg-risk-extreme/10 px-3 py-2 text-sm text-risk-extreme ring-1 ring-risk-extreme/20">{error}</p>}
 
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">
@@ -119,8 +119,8 @@ export function OrgManager({ orgs }: { orgs: OrgRow[] }) {
                     <span
                       className={`badge ${
                         org.isActive
-                          ? 'bg-emerald-100 text-emerald-700 ring-emerald-200'
-                          : 'bg-[#f0f2f5] text-muted ring-line'
+                          ? 'bg-risk-low/10 text-risk-low ring-risk-low/20'
+                          : 'bg-mist text-muted ring-line'
                       }`}
                     >
                       {org.isActive ? 'Aktif' : 'Nonaktif'}
@@ -131,12 +131,12 @@ export function OrgManager({ orgs }: { orgs: OrgRow[] }) {
                     <div className="flex items-center justify-end gap-3">
                       <Link
                         href={`/platform/compare?orgIds=${org.id}`}
-                        className="text-xs font-semibold text-teal hover:text-[#117a76]"
+                        className="text-xs font-semibold text-teal hover:text-navy"
                       >
                         Bandingkan
                       </Link>
                       <button
-                        className="text-xs font-semibold text-[#536174] hover:text-navy disabled:opacity-50"
+                        className="text-xs font-semibold text-muted hover:text-navy disabled:opacity-50"
                         onClick={() => toggleActive(org)}
                         disabled={busy}
                       >
@@ -159,7 +159,7 @@ export function OrgManager({ orgs }: { orgs: OrgRow[] }) {
       </div>
 
       {open ? (
-        <form onSubmit={createOrg} className="rounded-xl border border-[#cfe4e2] bg-teal-soft/40 p-4">
+        <form onSubmit={createOrg} className="rounded-xl border border-teal/20 bg-teal-soft/40 p-4">
           <h2 className="text-sm font-bold text-navy">Organisasi baru</h2>
           <p className="mt-0.5 text-xs text-muted">
             Admin pertama dibuat bersama organisasi dan dapat mengatur BTR, unit, serta pengguna lain.

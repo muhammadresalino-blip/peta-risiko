@@ -69,12 +69,12 @@ export function UsersManager({ users, units }: { users: UserRow[]; units: { id: 
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u.id} className="border-b border-slate-50 last:border-0">
+              <tr key={u.id} className="border-b border-line/60 last:border-0">
                 <td className="td font-medium text-ink">{u.name}</td>
-                <td className="td text-[#536174]">{u.email}</td>
+                <td className="td text-muted">{u.email}</td>
                 <td className="td">
                   <select
-                    className="rounded-md border border-[#d8e0e8] bg-white px-2 py-1 text-xs"
+                    className="rounded-md border border-line bg-white px-2 py-1 text-xs"
                     value={u.role}
                     onChange={(e) => patch(u.id, { role: e.target.value })}
                     disabled={busy}
@@ -88,7 +88,7 @@ export function UsersManager({ users, units }: { users: UserRow[]; units: { id: 
                 </td>
                 <td className="td">
                   <select
-                    className="rounded-md border border-[#d8e0e8] bg-white px-2 py-1 text-xs"
+                    className="rounded-md border border-line bg-white px-2 py-1 text-xs"
                     value={u.unitId ?? ''}
                     onChange={(e) => patch(u.id, { unitId: e.target.value || null })}
                     disabled={busy}
@@ -102,13 +102,13 @@ export function UsersManager({ users, units }: { users: UserRow[]; units: { id: 
                   </select>
                 </td>
                 <td className="td">
-                  <span className={`badge ${u.isActive ? 'bg-emerald-100 text-emerald-700 ring-emerald-200' : 'bg-[#f0f2f5] text-muted ring-line'}`}>
+                  <span className={`badge ${u.isActive ? 'bg-risk-low/10 text-risk-low ring-risk-low/20' : 'bg-mist text-muted ring-line'}`}>
                     {u.isActive ? 'Aktif' : 'Nonaktif'}
                   </span>
                 </td>
                 <td className="td text-right">
                   <button
-                    className="text-xs font-semibold text-[#536174] hover:text-navy"
+                    className="text-xs font-semibold text-muted hover:text-navy"
                     onClick={() => patch(u.id, { isActive: !u.isActive })}
                     disabled={busy}
                   >
@@ -122,7 +122,7 @@ export function UsersManager({ users, units }: { users: UserRow[]; units: { id: 
       </div>
 
       {open ? (
-        <form onSubmit={createUser} className="rounded-xl border border-[#cfe4e2] bg-teal-soft/40 p-4">
+        <form onSubmit={createUser} className="rounded-xl border border-teal/20 bg-teal-soft/40 p-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="label">Nama</label>
@@ -166,7 +166,7 @@ export function UsersManager({ users, units }: { users: UserRow[]; units: { id: 
               </select>
             </div>
           </div>
-          {error && <p className="mt-2 text-xs text-rose-600">{error}</p>}
+          {error && <p className="mt-2 text-xs text-risk-extreme">{error}</p>}
           <div className="mt-3 flex justify-end gap-2">
             <button type="button" className="btn-secondary" onClick={() => setOpen(false)}>
               Batal

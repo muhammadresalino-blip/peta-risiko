@@ -67,7 +67,7 @@ export function LoginForm() {
       </div>
 
       {error && (
-        <p className="flex items-start gap-2 rounded-lg bg-[#fdf1f0] px-3 py-2 text-xs text-[#a33e3a] ring-1 ring-[#f2d3d1]">
+        <p className="flex items-start gap-2 rounded-lg bg-risk-extreme/10 px-3 py-2 text-xs text-risk-extreme ring-1 ring-risk-extreme/20">
           <AlertCircle size={14} className="mt-0.5 shrink-0" />
           {error}
         </p>
@@ -79,7 +79,7 @@ export function LoginForm() {
       </button>
 
       <div className="rounded-lg bg-mist p-3 text-[11px] leading-relaxed text-muted">
-        <p className="font-bold text-[#536174]">Akun demo (sandi: Admin12345!)</p>
+        <p className="font-bold text-ink">Akun demo (sandi: Admin12345!)</p>
         <p className="mt-0.5">
           admin@petarisiko.local · owner@petarisiko.local · reviewer@petarisiko.local · viewer@petarisiko.local
         </p>

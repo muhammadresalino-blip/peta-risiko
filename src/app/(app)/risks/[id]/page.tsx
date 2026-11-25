@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { AlertTriangle } from 'lucide-react';
 import { requireUser, HttpError } from '@/lib/session';
 import { getRisk } from '@/server/services/risk.service';
 import { appetiteLimit } from '@/server/services/risk.service';
@@ -9,6 +10,7 @@ import { prisma } from '@/lib/db';
 import { formatDate, formatDateTime, formatRupiah, STATUS_LABEL, STRATEGY_LABEL } from '@/lib/format';
 import { LevelBadge, PageHeader, SectionCard, StatusBadge } from '@/components/ui';
 import { RiskActions } from '@/components/risk-actions';
+import { RiskAttachments, RiskKRI, RiskMitigations } from '@/components/risk-extras';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,7 +46,31 @@ export default async function RiskDetailPage({ params }: { params: Promise<{ id:
   ]);
 
   const actor = { id: user.id, role: user.role, orgId: user.orgId, unitId: user.unitId };
+  const canEdit = canEditRisk(actor, risk);
   const overdue = risk.nextReviewAt ? risk.nextReviewAt < new Date() : false;
+
+  const mitigations = risk.mitigations.map((m) => ({
+    id: m.id,
+    description: m.description,
+    deadline: m.deadline ? m.deadline.toISOString() : null,
+    status: m.status,
+    owner: m.owner,
+  }));
+  const kris = risk.kris.map((k) => ({
+    id: k.id,
+    name: k.name,
+    unit: k.unit,
+    threshold: k.threshold,
+    values: k.values.map((v) => ({ id: v.id, period: v.period, value: v.value })),
+  }));
+  const attachments = risk.attachments.map((a) => ({
+    id: a.id,
+    name: a.name,
+    mimeType: a.mimeType,
+    path: a.path,
+    size: a.size,
+    uploadedAt: a.uploadedAt.toISOString(),
+  }));
 
   return (
     <>
@@ -56,10 +82,20 @@ export default async function RiskDetailPage({ params }: { params: Promise<{ id:
         actions={
           <div className="flex items-center gap-2">
             <StatusBadge status={risk.status} />
-            {risk.aboveAppetite && <span className="badge bg-rose-100 text-rose-700 ring-rose-200">di atas appetite</span>}
+            {risk.aboveAppetite && <span className="badge bg-risk-extreme/10 text-risk-extreme ring-risk-extreme/20">di atas appetite</span>}
           </div>
         }
       />
+
+      {risk.scoreRes > risk.score && (
+        <div className="mb-6 flex items-start gap-2 rounded-lg bg-risk-medium/10 px-4 py-3 text-sm text-risk-medium ring-1 ring-risk-medium/20">
+          <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+          <p>
+            <strong>Perhatian:</strong> skor residual ({risk.scoreRes}) lebih tinggi daripada skor inherent (
+            {risk.score}). Periksa kembali penilaian probabilitas dan dampak residual.
+          </p>
+        </div>
+      )}
 
       <div className="mb-6">
         <RiskActions
@@ -127,12 +163,12 @@ export default async function RiskDetailPage({ params }: { params: Promise<{ id:
             </div>
             <div>
               <p className="text-xs text-muted">Nilai bersih</p>
-              <p className="data-value font-semibold text-emerald-700">{formatRupiah(risk.netValueRes)}</p>
+              <p className="data-value font-semibold text-risk-low">{formatRupiah(risk.netValueRes)}</p>
             </div>
-            <div className="col-span-2 rounded-md bg-mist px-3 py-2 text-xs text-[#536174]">
+            <div className="col-span-2 rounded-md bg-mist px-3 py-2 text-xs text-muted">
               Batas appetite kategori ini: <strong>{limit !== null ? `skor ≤ ${limit}` : 'belum diatur'}</strong>
               {limit !== null && (
-                <span className={risk.aboveAppetite ? 'text-rose-600' : 'text-emerald-600'}>
+                <span className={risk.aboveAppetite ? 'text-risk-extreme' : 'text-risk-low'}>
                   {' '}
                   — risiko ini {risk.aboveAppetite ? 'melampaui' : 'dalam'} batas.
                 </span>
@@ -153,7 +189,7 @@ export default async function RiskDetailPage({ params }: { params: Promise<{ id:
             <Card label="Dampak kualitatif">{risk.qualitativeImpact}</Card>
             <Card label="Tanggal identifikasi">{formatDate(risk.identifiedAt)}</Card>
             <Card label="Review berikutnya">
-              <span className={overdue ? 'font-semibold text-rose-600' : ''}>
+              <span className={overdue ? 'font-semibold text-risk-extreme' : ''}>
                 {formatDate(risk.nextReviewAt)}
                 {overdue && ' (terlambat)'}
               </span>
@@ -208,10 +244,10 @@ export default async function RiskDetailPage({ params }: { params: Promise<{ id:
               {logs.map((log) => (
                 <li key={log.id} className="py-2.5 first:pt-0 last:pb-0">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="badge bg-[#f0f2f5] text-[#475467] ring-line">{log.action}</span>
+                    <span className="badge bg-mist text-ink ring-line">{log.action}</span>
                     <span className="text-xs text-muted">{formatDateTime(log.at)}</span>
                   </div>
-                  <p className="mt-1 truncate text-xs text-[#536174]">
+                  <p className="mt-1 truncate text-xs text-muted">
                     {log.before || log.after ? (
                       <span className="font-mono text-[11px] text-muted">
                         {log.before ? `sebelum: ${log.before.slice(0, 120)}` : ''}
@@ -229,11 +265,24 @@ export default async function RiskDetailPage({ params }: { params: Promise<{ id:
         </SectionCard>
       </div>
 
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <section className="card p-5">
+          <RiskMitigations riskId={risk.id} initialData={mitigations} canEdit={canEdit} />
+        </section>
+        <section className="card p-5">
+          <RiskAttachments riskId={risk.id} initialData={attachments} canEdit={canEdit} />
+        </section>
+      </div>
+
+      <section className="card mt-6 p-5">
+        <RiskKRI riskId={risk.id} initialData={kris} canEdit={canEdit} />
+      </section>
+
       <div className="mt-6 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
         <p>
           Dibuat {formatDateTime(risk.createdAt)} · diperbarui {formatDateTime(risk.updatedAt)} · versi {risk.version}
         </p>
-        <Link href="/risks" className="font-semibold text-teal hover:text-[#117a76]">
+        <Link href="/risks" className="font-semibold text-teal hover:text-navy">
           ← Kembali ke register
         </Link>
       </div>

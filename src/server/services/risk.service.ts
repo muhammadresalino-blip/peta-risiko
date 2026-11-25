@@ -122,6 +122,9 @@ export async function getRisk(actor: Actor, id: string) {
       unit: true,
       owner: { select: { id: true, name: true, email: true } },
       reviews: { include: { reviewer: { select: { name: true } } }, orderBy: { reviewedAt: 'desc' } },
+      mitigations: { orderBy: { createdAt: 'asc' } },
+      kris: { include: { values: { orderBy: { period: 'asc' } } }, orderBy: { createdAt: 'asc' } },
+      attachments: { orderBy: { uploadedAt: 'desc' } },
     },
   });
   if (!risk) throw new HttpError(404, 'NOT_FOUND', 'Risiko tidak ditemukan.');

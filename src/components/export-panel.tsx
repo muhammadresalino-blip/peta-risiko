@@ -50,7 +50,7 @@ export function ExportPanel({
 
       <div className="grid gap-6 lg:grid-cols-2">
         <SectionCard title="Risk Input" description="Format kolom sama dengan sheet Risk Input.">
-          <p className="text-sm text-[#536174]">
+          <p className="text-sm text-muted">
             {counts.total} risiko{unit ? ` di unit ${unit.name}` : ' di seluruh unit'}, lengkap dengan skor inherent,
             residual, dan status.
           </p>
@@ -60,7 +60,7 @@ export function ExportPanel({
         </SectionCard>
 
         <SectionCard title="Risk Register" description="Ringkasan untuk manajemen.">
-          <p className="text-sm text-[#536174]">
+          <p className="text-sm text-muted">
             {counts.active} risiko aktif/diajukan{unit ? ` di unit ${unit.name}` : ' di seluruh unit'}: P, I, skor,
             tingkat, residual, dan status appetite.
           </p>
@@ -70,7 +70,7 @@ export function ExportPanel({
         </SectionCard>
 
         <SectionCard title="Cetak register" description="Halaman siap cetak A4 landscape.">
-          <p className="text-sm text-[#536174]">
+          <p className="text-sm text-muted">
             Buka tampilan cetak lalu gunakan tombol Cetak atau Ctrl+P. Navigasi dan sidebar tidak ikut tercetak.
           </p>
           <a className="btn-secondary mt-4 w-full" href={`/risks/print${qs}`}>
@@ -79,7 +79,7 @@ export function ExportPanel({
         </SectionCard>
 
         <SectionCard title="Templat impor" description="Kerangka kolom untuk pengisian data baru.">
-          <p className="text-sm text-[#536174]">
+          <p className="text-sm text-muted">
             Kosong dengan header kolom standar. Isi satu baris per risiko, lalu impor lewat menu Impor Excel.
           </p>
           <a className="btn-secondary mt-4 w-full" href="/api/v1/imports/risks">

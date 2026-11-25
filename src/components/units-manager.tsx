@@ -64,14 +64,14 @@ export function UnitsManager({ units }: { units: UnitRow[] }) {
           </thead>
           <tbody>
             {units.map((u) => (
-              <tr key={u.id} className="border-b border-slate-50 last:border-0">
+              <tr key={u.id} className="border-b border-line/60 last:border-0">
                 <td className="td font-medium text-ink">{u.name}</td>
-                <td className="td text-[#536174]">{u.kind === 'BRANCH' ? 'Branch Office' : 'Head Office'}</td>
+                <td className="td text-muted">{u.kind === 'BRANCH' ? 'Branch Office' : 'Head Office'}</td>
                 <td className="td text-center tabular-nums">{u._count.risks}</td>
                 <td className="td text-center tabular-nums">{u._count.users}</td>
                 <td className="td text-right">
                   <button
-                    className="text-xs font-semibold text-rose-600 hover:text-rose-700 disabled:opacity-40"
+                    className="text-xs font-semibold text-risk-extreme hover:text-risk-extreme/80 disabled:opacity-40"
                     onClick={() => remove(u)}
                     disabled={busy}
                   >
@@ -103,7 +103,7 @@ export function UnitsManager({ units }: { units: UnitRow[] }) {
         <button type="submit" className="btn-primary" disabled={busy}>
           Tambah unit
         </button>
-        {error && <p className="w-full text-xs text-rose-600">{error}</p>}
+        {error && <p className="w-full text-xs text-risk-extreme">{error}</p>}
       </form>
     </div>
   );

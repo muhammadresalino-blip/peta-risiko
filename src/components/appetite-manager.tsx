@@ -96,20 +96,20 @@ export function AppetiteManager({
               </tr>
             )}
             {appetites.map((a) => (
-              <tr key={a.id} className="border-b border-slate-50 last:border-0">
+              <tr key={a.id} className="border-b border-line/60 last:border-0">
                 <td className="td font-medium text-ink">{a.category}</td>
-                <td className="td text-[#536174]">{unitName(a.unitId)}</td>
+                <td className="td text-muted">{unitName(a.unitId)}</td>
                 <td className="td text-center">
-                  <span className="badge bg-[#f0f2f5] text-ink ring-line">≤ {a.maxScore}</span>
+                  <span className="badge bg-mist text-ink ring-line">≤ {a.maxScore}</span>
                 </td>
                 <td className="td text-muted">{a.note ?? '—'}</td>
                 {canManage && (
                   <td className="td text-right">
-                    <button className="text-xs font-semibold text-teal hover:text-[#117a76]" onClick={() => openEdit(a)}>
+                    <button className="text-xs font-semibold text-teal hover:text-navy" onClick={() => openEdit(a)}>
                       Ubah
                     </button>
-                    <span className="mx-2 text-slate-200">|</span>
-                    <button className="text-xs font-semibold text-rose-600 hover:text-rose-700" onClick={() => remove(a)} disabled={busy}>
+                    <span className="mx-2 text-line">|</span>
+                    <button className="text-xs font-semibold text-risk-extreme hover:text-risk-extreme/80" onClick={() => remove(a)} disabled={busy}>
                       Hapus
                     </button>
                   </td>
@@ -123,7 +123,7 @@ export function AppetiteManager({
       {canManage && (
         <div>
           {editing ? (
-            <div className="rounded-xl border border-[#cfe4e2] bg-teal-soft/50 p-4">
+            <div className="rounded-xl border border-teal/20 bg-teal-soft/50 p-4">
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
                   <label className="label">Kategori</label>
@@ -166,7 +166,7 @@ export function AppetiteManager({
                   <input className="input" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} />
                 </div>
               </div>
-              {error && <p className="mt-2 text-xs text-rose-600">{error}</p>}
+              {error && <p className="mt-2 text-xs text-risk-extreme">{error}</p>}
               <div className="mt-3 flex justify-end gap-2">
                 <button className="btn-secondary" onClick={() => setEditing(null)}>
                   Batal

@@ -18,7 +18,11 @@ export async function PATCH(req: Request, { params }: Ctx) {
     const user = await requireOrgUser();
     const { id } = await params;
     const patch = riskUpdateSchema.parse(await req.json());
-    return ok(await updateRisk(user, id, patch, clientIp(req)));
+    const risk = await updateRisk(user, id, patch, clientIp(req));
+    return ok({
+      ...risk,
+      warning: risk.scoreRes > risk.score ? 'Skor residual lebih tinggi dari inherent.' : null,
+    });
   });
 }
 

@@ -80,19 +80,19 @@ export default async function DashboardPage() {
               return (
                 <div key={row.level}>
                   <div className="mb-1.5 flex items-center justify-between text-xs">
-                    <span className="font-semibold text-[#536174]">{LEVEL_LABEL[lv]}</span>
+                    <span className="font-semibold text-muted">{LEVEL_LABEL[lv]}</span>
                     <span className="text-muted">
                       {row.inherent} inherent · {row.residual} residual
                     </span>
                   </div>
                   <div className="space-y-1">
-                    <div className="h-2 w-full overflow-hidden rounded-full bg-[#f0f2f5]">
+                    <div className="h-2 w-full overflow-hidden rounded-full bg-mist">
                       <div
                         className={`h-full rounded-full ${LEVEL_STYLES[lv].dot}`}
                         style={{ width: `${(row.inherent / maxLevel) * 100}%` }}
                       />
                     </div>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f0f2f5]">
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-mist">
                       <div
                         className="h-full rounded-full bg-teal"
                         style={{ width: `${(row.residual / maxLevel) * 100}%` }}
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
           </div>
           <p className="mt-5 flex items-center gap-3 text-[11px] text-muted">
             <span className="flex items-center gap-1">
-              <span className="h-2 w-4 rounded-full bg-[#b9d5d2]" /> inherent
+              <span className="h-2 w-4 rounded-full bg-teal/30" /> inherent
             </span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-4 rounded-full bg-teal" /> residual
@@ -118,7 +118,7 @@ export default async function DashboardPage() {
           description="Jumlah risiko dan nilai bersih per unit."
           className="lg:col-span-3"
           action={
-            <Link href="/heatmap" className="text-xs font-semibold text-teal hover:text-[#117a76]">
+            <Link href="/heatmap" className="text-xs font-semibold text-teal hover:text-navy">
               Buka heat map →
             </Link>
           }
@@ -139,7 +139,7 @@ export default async function DashboardPage() {
                 </thead>
                 <tbody>
                   {data.byUnit.map((u) => (
-                    <tr key={u.unit} className="border-b border-slate-50 last:border-0">
+                    <tr key={u.unit} className="border-b border-line/60 last:border-0">
                       <td className="td font-medium text-ink">{u.unit}</td>
                       <td className="td text-right tabular-nums">{u.count}</td>
                       <td className="td text-right tabular-nums">{formatRupiah(u.netValue, { compact: true })}</td>
@@ -148,9 +148,9 @@ export default async function DashboardPage() {
                       </td>
                       <td className="td text-right">
                         {u.above > 0 ? (
-                          <span className="badge bg-rose-100 text-rose-700 ring-rose-200">{u.above}</span>
+                          <span className="badge bg-risk-extreme/10 text-risk-extreme ring-risk-extreme/20">{u.above}</span>
                         ) : (
-                          <span className="text-[#c8d3dd]">—</span>
+                          <span className="text-muted/60">—</span>
                         )}
                       </td>
                     </tr>
@@ -181,7 +181,7 @@ export default async function DashboardPage() {
                   <div key={row.period} className="flex min-w-0 flex-1 flex-col items-center gap-2">
                     <div className="flex h-40 w-full items-end justify-center gap-1">
                       <div
-                        className="w-[38%] rounded-t bg-[#b9d5d2]"
+                        className="w-[38%] rounded-t bg-teal/30"
                         style={{ height: `${Math.max(3, (row.netValue / maxTrend) * 100)}%` }}
                         title={`Inherent ${row.period}: ${formatRupiah(row.netValue)}`}
                       />
@@ -197,7 +197,7 @@ export default async function DashboardPage() {
               </div>
               <p className="mt-4 flex items-center gap-3 text-[11px] text-muted">
                 <span className="flex items-center gap-1">
-                  <span className="h-2 w-4 rounded-full bg-[#b9d5d2]" /> inherent
+                  <span className="h-2 w-4 rounded-full bg-teal/30" /> inherent
                 </span>
                 <span className="flex items-center gap-1">
                   <span className="h-2 w-4 rounded-full bg-teal" /> residual
@@ -215,7 +215,7 @@ export default async function DashboardPage() {
           description="Risiko aktif yang tanggal review berikutnya sudah lewat."
           className="lg:col-span-2"
           action={
-            <Link href="/risks?status=ACTIVE" className="text-xs font-semibold text-teal hover:text-[#117a76]">
+            <Link href="/risks?status=ACTIVE" className="text-xs font-semibold text-teal hover:text-navy">
               Buka register →
             </Link>
           }
@@ -236,7 +236,7 @@ export default async function DashboardPage() {
                     >
                       {r.code} · {r.description}
                     </Link>
-                    <span className="shrink-0 text-[11px] font-semibold text-rose-600">
+                    <span className="shrink-0 text-[11px] font-semibold text-risk-extreme">
                       {formatDate(r.nextReviewAt)}
                     </span>
                   </div>
@@ -264,7 +264,7 @@ export default async function DashboardPage() {
           title="Nilai bersih terbesar"
           description="Lima risiko aktif dengan eksposur tertinggi."
           action={
-            <Link href="/risks?sort=netValue:desc" className="text-xs font-semibold text-teal hover:text-[#117a76]">
+            <Link href="/risks?sort=netValue:desc" className="text-xs font-semibold text-teal hover:text-navy">
               Semua risiko →
             </Link>
           }
@@ -284,7 +284,7 @@ export default async function DashboardPage() {
                       <span className="truncate">{r.unit?.name}</span>
                     </p>
                   </div>
-                  <span className="shrink-0 text-sm font-semibold tabular-nums text-[#475467]">
+                  <span className="shrink-0 text-sm font-semibold tabular-nums text-ink">
                     {formatRupiah(r.netValue, { compact: true })}
                   </span>
                 </li>
@@ -297,7 +297,7 @@ export default async function DashboardPage() {
           title="Di atas Risk Appetite"
           description="Risiko aktif yang skor residual-nya melewati batas appetite."
           action={
-            <Link href="/appetite" className="text-xs font-semibold text-teal hover:text-[#117a76]">
+            <Link href="/appetite" className="text-xs font-semibold text-teal hover:text-navy">
               Kelola appetite →
             </Link>
           }

@@ -25,16 +25,16 @@ export default async function HeatmapPage({ searchParams }: { searchParams: Prom
         title="Heat Map 5 × 5"
         description="Posisi setiap risiko aktif berdasarkan probabilitas (sumbu vertikal) dan dampak (horizontal)."
         actions={
-          <div className="inline-flex rounded-lg border border-[#d8e0e8] bg-white p-0.5 text-xs font-semibold">
+          <div className="inline-flex rounded-lg border border-line bg-white p-0.5 text-xs font-semibold">
             <Link
               href="/heatmap?view=inherent"
-              className={`rounded-md px-3 py-1.5 ${view === 'inherent' ? 'bg-navy text-white' : 'text-[#536174] hover:bg-mist'}`}
+              className={`rounded-md px-3 py-1.5 ${view === 'inherent' ? 'bg-navy text-white' : 'text-muted hover:bg-mist'}`}
             >
               Inherent
             </Link>
             <Link
               href="/heatmap?view=residual"
-              className={`rounded-md px-3 py-1.5 ${view === 'residual' ? 'bg-navy text-white' : 'text-[#536174] hover:bg-mist'}`}
+              className={`rounded-md px-3 py-1.5 ${view === 'residual' ? 'bg-navy text-white' : 'text-muted hover:bg-mist'}`}
             >
               Residual
             </Link>
@@ -113,7 +113,7 @@ export default async function HeatmapPage({ searchParams }: { searchParams: Prom
               {(['LOW', 'MEDIUM', 'HIGH', 'EXTREME'] as Level[]).map((lv) => (
                 <li key={lv} className="flex items-center gap-2">
                   <span className={`h-3 w-3 rounded ${LEVEL_STYLES[lv].dot}`} />
-                  <span className="text-[#475467]">{LEVEL_LABEL[lv]}</span>
+                  <span className="text-ink">{LEVEL_LABEL[lv]}</span>
                 </li>
               ))}
             </ul>
@@ -133,10 +133,10 @@ export default async function HeatmapPage({ searchParams }: { searchParams: Prom
                   .slice(0, 6)
                   .map((c) => (
                     <li key={`${c.p}-${c.i}`} className="flex items-center justify-between">
-                      <span className="text-[#536174]">
+                      <span className="text-muted">
                         P {c.p} × I {c.i} = {c.score}
                       </span>
-                      <span className="badge bg-[#f0f2f5] text-[#475467] ring-line">{c.risks.length} risiko</span>
+                      <span className="badge bg-mist text-muted ring-line">{c.risks.length} risiko</span>
                     </li>
                   ))}
               </ul>

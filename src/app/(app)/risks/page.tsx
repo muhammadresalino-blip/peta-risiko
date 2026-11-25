@@ -41,7 +41,7 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
     return qs ? `/risks?${qs}` : '/risks';
   };
 
-  const sortLabel = (field: string) => (sort.startsWith(field) ? (sort.endsWith('asc') ? ' â†‘' : ' â†“') : '');
+  const sortLabel = (field: string) => (sort.startsWith(field) ? (sort.endsWith('asc') ? ' ↑' : ' ↓') : '');
 
   return (
     <>
@@ -69,7 +69,7 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
           <label className="label" htmlFor="q">
             Cari
           </label>
-          <input id="q" name="q" defaultValue={q} placeholder="Kode, deskripsi, sasaranâ€¦" className="input" />
+          <input id="q" name="q" defaultValue={q} placeholder="Kode, deskripsi, sasaran…" className="input" />
         </div>
         <div>
           <label className="label" htmlFor="unit">
@@ -124,8 +124,8 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
           </select>
         </div>
         <div className="flex items-end gap-2 xl:col-span-3">
-          <label className="flex items-center gap-2 text-sm text-[#536174]">
-            <input type="checkbox" name="appetite" value="above" defaultChecked={appetite === 'above'} className="h-4 w-4 rounded border-[#d8e0e8]" />
+          <label className="flex items-center gap-2 text-sm text-muted">
+            <input type="checkbox" name="appetite" value="above" defaultChecked={appetite === 'above'} className="h-4 w-4 rounded border-line" />
             Hanya di atas appetite
           </label>
           <input type="hidden" name="sort" value={sort} />
@@ -158,15 +158,15 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
                 <tr>
                   <th className="th">Kode</th>
                   <th className="th">Risiko</th>
-                  <th className="th">P Ã— I</th>
+                  <th className="th">P × I</th>
                   <th className="th">
-                    <Link href={buildQuery({ sort: sort.startsWith('score') ? 'score:asc' : 'score:desc' })} className="hover:text-[#475467]">
+                    <Link href={buildQuery({ sort: sort.startsWith('score') ? 'score:asc' : 'score:desc' })} className="hover:text-ink">
                       Inherent{sortLabel('score')}
                     </Link>
                   </th>
                   <th className="th">Residual</th>
                   <th className="th text-right">
-                    <Link href={buildQuery({ sort: sort.startsWith('netValue') ? 'netValue:asc' : 'netValue:desc' })} className="hover:text-[#475467]">
+                    <Link href={buildQuery({ sort: sort.startsWith('netValue') ? 'netValue:asc' : 'netValue:desc' })} className="hover:text-ink">
                       Nilai bersih{sortLabel('netValue')}
                     </Link>
                   </th>
@@ -178,7 +178,7 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
                 {result.rows.map((r) => (
                   <tr key={r.id} className="border-t border-line transition hover:bg-mist/70">
                     <td className="td">
-                      <Link href={`/risks/${r.id}`} className="risk-code font-semibold text-teal hover:text-[#117a76]">
+                      <Link href={`/risks/${r.id}`} className="risk-code font-semibold text-teal hover:text-navy">
                         {r.code}
                       </Link>
                     </td>
@@ -186,15 +186,15 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
                       <p className="truncate font-medium text-ink">{r.description}</p>
                       <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-muted">
                         <span>{r.unit?.name}</span>
-                        <span className="text-[#c8d3dd]">Â·</span>
+                        <span className="text-muted/40">·</span>
                         <span className="truncate">{r.category}</span>
                         {r.aboveAppetite && (
-                          <span className="badge bg-rose-100 text-rose-700 ring-rose-200">di atas appetite</span>
+                          <span className="badge bg-risk-extreme/10 text-risk-extreme ring-risk-extreme/20">di atas appetite</span>
                         )}
                       </p>
                     </td>
                     <td className="td data-value text-muted">
-                      {r.p} Ã— {r.i}
+                      {r.p} × {r.i}
                     </td>
                     <td className="td">
                       <LevelBadge level={r.level} score={r.score} />
@@ -204,7 +204,7 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
                     </td>
                     <td className="td text-right">
                       <p className="data-value font-medium text-ink">{formatRupiah(r.netValue, { compact: true })}</p>
-                      <p className="data-value text-xs text-[#98a2b3]">{formatRupiah(r.netValueRes, { compact: true })}</p>
+                      <p className="data-value text-xs text-muted">{formatRupiah(r.netValueRes, { compact: true })}</p>
                     </td>
                     <td className="td">
                       <StatusBadge status={r.status} />
@@ -218,7 +218,7 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
 
           <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line px-4 py-3 text-xs text-muted">
             <p>
-              Menampilkan {(result.page - 1) * result.limit + 1}â€“{Math.min(result.page * result.limit, result.total)} dari{' '}
+              Menampilkan {(result.page - 1) * result.limit + 1}–{Math.min(result.page * result.limit, result.total)} dari{' '}
               {result.total} risiko
             </p>
             <div className="flex items-center gap-1">
@@ -227,9 +227,9 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
                 aria-disabled={page <= 1}
                 className={`btn-secondary btn-sm ${page <= 1 ? 'pointer-events-none opacity-40' : ''}`}
               >
-                â†
+                ←
               </Link>
-              <span className="px-2 font-semibold text-[#536174]">
+              <span className="px-2 font-semibold text-muted">
                 {result.page} / {result.pages}
               </span>
               <Link
@@ -237,7 +237,7 @@ export default async function RisksPage({ searchParams }: { searchParams: Promis
                 aria-disabled={page >= result.pages}
                 className={`btn-secondary btn-sm ${page >= result.pages ? 'pointer-events-none opacity-40' : ''}`}
               >
-                â†’
+                →
               </Link>
             </div>
           </div>

@@ -11,16 +11,16 @@ type Search = Record<string, string | string[] | undefined>;
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) ?? '';
 
 const ACTION_STYLE: Record<string, string> = {
-  CREATE: 'bg-emerald-100 text-emerald-700 ring-emerald-200',
-  UPDATE: 'bg-sky-100 text-sky-700 ring-sky-200',
-  DELETE: 'bg-rose-100 text-rose-700 ring-rose-200',
-  APPROVE: 'bg-[#e6f3ef] text-[#27745f] ring-[#cfe7e1]',
-  REJECT: 'bg-orange-100 text-orange-700 ring-orange-200',
-  SUBMIT: 'bg-[#f0f2f5] text-[#475467] ring-line',
-  RETIRE: 'bg-zinc-100 text-zinc-600 ring-zinc-200',
-  IMPORT: 'bg-purple-100 text-purple-700 ring-purple-200',
-  RECALCULATE: 'bg-amber-100 text-amber-700 ring-amber-200',
-  SETTINGS: 'bg-amber-100 text-amber-700 ring-amber-200',
+  CREATE: 'bg-risk-low/10 text-risk-low ring-risk-low/20',
+  UPDATE: 'bg-blue/10 text-blue ring-blue/20',
+  DELETE: 'bg-risk-extreme/10 text-risk-extreme ring-risk-extreme/20',
+  APPROVE: 'bg-teal-soft text-teal ring-teal/20',
+  REJECT: 'bg-risk-high/10 text-risk-high ring-risk-high/20',
+  SUBMIT: 'bg-mist text-muted ring-line',
+  RETIRE: 'bg-mist text-muted ring-line',
+  IMPORT: 'bg-teal-soft text-teal ring-teal/20',
+  RECALCULATE: 'bg-risk-medium/10 text-risk-medium ring-risk-medium/20',
+  SETTINGS: 'bg-risk-medium/10 text-risk-medium ring-risk-medium/20',
 };
 
 export default async function AuditLogsPage({ searchParams }: { searchParams: Promise<Search> }) {
@@ -141,21 +141,21 @@ export default async function AuditLogsPage({ searchParams }: { searchParams: Pr
               </thead>
               <tbody>
                 {logs.map((log) => (
-                  <tr key={log.id} className="border-b border-slate-50 last:border-0 align-top">
+                  <tr key={log.id} className="border-b border-line/60 last:border-0 align-top">
                     <td className="td whitespace-nowrap text-xs text-muted">{formatDateTime(log.at)}</td>
-                    <td className="td whitespace-nowrap text-[#475467]">{nameById.get(log.actorId) ?? 'â€”'}</td>
+                    <td className="td whitespace-nowrap text-ink">{nameById.get(log.actorId) ?? '—'}</td>
                     <td className="td">
-                      <span className={`badge ${ACTION_STYLE[log.action] ?? 'bg-[#f0f2f5] text-[#475467] ring-line'}`}>
+                      <span className={`badge ${ACTION_STYLE[log.action] ?? 'bg-mist text-muted ring-line'}`}>
                         {log.action}
                       </span>
                     </td>
-                    <td className="td text-[#536174]">
+                    <td className="td text-muted">
                       {log.entity}
-                      <span className="block text-[11px] text-[#98a2b3]">{log.entityId.slice(0, 12)}â€¦</span>
+                      <span className="block text-[11px] text-muted/70">{log.entityId.slice(0, 12)}…</span>
                     </td>
                     <td className="td">
                       <p className="max-w-xl truncate font-mono text-[11px] text-muted" title={log.after ?? ''}>
-                        {log.before ? `âˆ’ ${log.before.slice(0, 80)} ` : ''}
+                        {log.before ? `− ${log.before.slice(0, 80)} ` : ''}
                         {log.after ? `+ ${log.after.slice(0, 120)}` : ''}
                       </p>
                     </td>
@@ -172,10 +172,10 @@ export default async function AuditLogsPage({ searchParams }: { searchParams: Pr
           </span>
           <div className="flex gap-1">
             <a className={`btn-secondary btn-sm ${page <= 1 ? 'pointer-events-none opacity-40' : ''}`} href={qs({ page: page - 1 })}>
-              â†
+              ←
             </a>
             <a className={`btn-secondary btn-sm ${page >= pages ? 'pointer-events-none opacity-40' : ''}`} href={qs({ page: page + 1 })}>
-              â†’
+              →
             </a>
           </div>
         </div>

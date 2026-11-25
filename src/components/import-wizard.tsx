@@ -170,7 +170,7 @@ export function ImportWizard({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border border-dashed border-[#d8e0e8] bg-mist p-6">
+      <div className="rounded-xl border border-dashed border-line bg-mist p-6">
         <div className="flex flex-wrap items-end gap-4">
           <div className="min-w-[240px] flex-1">
             <label className="label" htmlFor="file">
@@ -251,10 +251,10 @@ export function ImportWizard({
         </p>
       </div>
 
-      {error && <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700 ring-1 ring-rose-200">{error}</p>}
+      {error && <p className="rounded-lg bg-risk-extreme/10 px-3 py-2 text-sm text-risk-extreme ring-1 ring-risk-extreme/20">{error}</p>}
 
       {done && (
-        <div className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800 ring-1 ring-emerald-200">
+        <div className="rounded-lg bg-risk-low/10 px-4 py-3 text-sm text-risk-low ring-1 ring-risk-low/20">
           <p className="font-semibold">Impor selesai: {done.created} risiko dibuat sebagai Draft.</p>
           <p className="mt-1 text-xs">
             {done.failed > 0 ? `${done.failed} baris dilewati karena error.` : 'Semua baris berhasil disimpan.'}{' '}
@@ -314,7 +314,7 @@ export function ImportWizard({
               </button>
               {selectedTemplate && (
                 <button
-                  className="btn-ghost !px-2.5 text-rose-600 hover:bg-rose-50"
+                  className="btn-ghost !px-2.5 text-risk-extreme hover:bg-risk-extreme/10"
                   onClick={deleteTemplate}
                   disabled={busy !== null}
                 >
@@ -325,7 +325,7 @@ export function ImportWizard({
                 Perbarui pratinjau
               </button>
             </div>
-            {templateMessage && <p className="mt-2 text-xs font-medium text-emerald-600">{templateMessage}</p>}
+            {templateMessage && <p className="mt-2 text-xs font-medium text-risk-low">{templateMessage}</p>}
           </div>
         </div>
       )}
@@ -363,12 +363,12 @@ export function ImportWizard({
               </thead>
               <tbody>
                 {preview.rows.map((r) => (
-                  <tr key={r.rowNumber} className="border-b border-slate-50 last:border-0 align-top">
+                  <tr key={r.rowNumber} className="border-b border-line/60 last:border-0 align-top">
                     <td className="td text-muted">{r.rowNumber}</td>
                     <td className="td">
                       <span
                         className={`badge ${
-                          r.ok ? 'bg-emerald-100 text-emerald-700 ring-emerald-200' : 'bg-rose-100 text-rose-700 ring-rose-200'
+                          r.ok ? 'bg-risk-low/10 text-risk-low ring-risk-low/20' : 'bg-risk-extreme/10 text-risk-extreme ring-risk-extreme/20'
                         }`}
                       >
                         {r.ok ? 'Valid' : 'Error'}
@@ -380,7 +380,7 @@ export function ImportWizard({
                     <td className="td text-xs tabular-nums">
                       {r.data.p && r.data.i ? `${r.data.p} × ${r.data.i} = ${r.data.score}` : '—'}
                     </td>
-                    <td className="td text-xs text-rose-600">{r.errors.join(' ')}</td>
+                    <td className="td text-xs text-risk-extreme">{r.errors.join(' ')}</td>
                   </tr>
                 ))}
               </tbody>

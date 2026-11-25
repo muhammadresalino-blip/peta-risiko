@@ -81,7 +81,7 @@ export function Sidebar({
     <nav className="space-y-6">
       {sections.map((section) => (
         <div key={section}>
-          <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[1.4px] text-[#98a2b3]">{section}</p>
+          <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[1.4px] text-white/40">{section}</p>
           <ul className="grid gap-1">
             {items
               .filter((i) => i.section === section)
@@ -98,10 +98,10 @@ export function Sidebar({
                       onClick={() => setOpen(false)}
                       aria-current={active ? 'page' : undefined}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition ${
-                        active ? 'bg-[#eaf1f6] text-navy' : 'text-[#536174] hover:bg-[#f3f6f9] hover:text-navy'
+                        active ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'
                       }`}
                     >
-                      <Icon size={16} className={active ? 'text-teal' : 'text-[#8290a3]'} />
+                      <Icon size={16} className={active ? 'text-teal-light' : 'text-white/40'} />
                       {item.label}
                     </Link>
                   </li>
@@ -115,15 +115,15 @@ export function Sidebar({
 
   return (
     <>
-      <div className="flex items-center justify-between border-b border-line bg-white px-4 py-3 print:hidden lg:hidden">
+      <div className="flex items-center justify-between border-b border-white/10 bg-navy px-4 py-3 print:hidden lg:hidden">
         <Link href={homeHref} className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-navy text-[13px] font-extrabold tracking-tight text-white">
+          <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-white text-[13px] font-extrabold tracking-tight text-navy">
             PR
           </span>
-          <span className="font-display text-[15px] font-extrabold tracking-tight text-navy">PetaRisiko</span>
+          <span className="font-display text-[15px] font-extrabold tracking-tight text-white">PetaRisiko</span>
         </Link>
         <button
-          className="icon-btn"
+          className="grid h-9 w-9 place-items-center rounded-[9px] border border-white/10 bg-white/5 text-white transition hover:bg-white/10 hover:text-white"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? 'Tutup menu' : 'Buka menu'}
           aria-expanded={open}
@@ -133,7 +133,7 @@ export function Sidebar({
       </div>
 
       {open && (
-        <div className="border-b border-line bg-white p-4 print:hidden lg:hidden">
+        <div className="border-b border-white/10 bg-navy p-4 print:hidden lg:hidden">
           {nav}
           <button className="btn-secondary mt-6 w-full" onClick={logout} disabled={loggingOut}>
             <LogOut size={14} /> {loggingOut ? 'Keluar…' : 'Keluar'}
@@ -141,52 +141,52 @@ export function Sidebar({
         </div>
       )}
 
-      <aside className="sticky top-0 hidden h-screen w-[248px] shrink-0 flex-col gap-7 border-r border-line bg-white px-4 py-6 print:hidden lg:flex">
+      <aside className="sticky top-0 hidden h-screen w-[252px] shrink-0 flex-col gap-7 border-r border-white/10 bg-navy px-4 py-6 print:hidden lg:flex">
         <Link href={homeHref} className="flex items-center gap-3 px-2.5">
-          <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-navy text-[15px] font-extrabold tracking-tight text-white">
+          <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-white text-[15px] font-extrabold tracking-tight text-navy">
             PR
           </span>
           <span>
-            <span className="block font-display text-[16px] font-extrabold leading-tight tracking-[-0.5px] text-navy">
+            <span className="block font-display text-[16px] font-extrabold leading-tight tracking-[-0.5px] text-white">
               PetaRisiko
             </span>
-            <span className="mt-0.5 block text-[10px] uppercase leading-tight tracking-[1.4px] text-[#8290a3]">
+            <span className="mt-0.5 block text-[10px] uppercase leading-tight tracking-[1.4px] text-white/40">
               Risk intelligence
             </span>
           </span>
         </Link>
 
         {user.orgName && (
-          <div className="mx-1 rounded-[10px] border border-line px-3 py-2.5">
-            <p className="truncate text-xs font-bold text-ink">{user.orgName}</p>
-            <p className="mt-0.5 text-[11px] text-muted">Ruang kerja organisasi</p>
+          <div className="mx-1 rounded-[10px] border border-white/10 bg-white/5 px-3 py-2.5">
+            <p className="truncate text-xs font-bold text-white">{user.orgName}</p>
+            <p className="mt-0.5 text-[11px] text-white/40">Ruang kerja organisasi</p>
           </div>
         )}
 
         <div className="min-h-0 flex-1 overflow-y-auto">{nav}</div>
 
         <div>
-          <div className="mb-4 rounded-[9px] bg-mist p-3">
-            <p className="flex items-center gap-1.5 text-[11px] font-bold text-blue">
+          <div className="mb-4 rounded-[9px] bg-white/5 p-3">
+            <p className="flex items-center gap-1.5 text-[11px] font-bold text-teal-light">
               <ShieldCheck size={14} /> Ruang kerja aman
             </p>
-            <p className="mt-1.5 text-[10px] leading-relaxed text-[#7b8794]">
+            <p className="mt-1.5 text-[10px] leading-relaxed text-white/40">
               Akses data mengikuti peran dan unit organisasi.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 border-t border-line pt-4">
-            <span className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full bg-[#dce9e8] text-xs font-bold text-[#176d68]">
+          <div className="flex items-center gap-2.5 border-t border-white/10 pt-4">
+            <span className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-full bg-white/10 text-xs font-bold text-white">
               {initials(user.name)}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-bold text-ink">{user.name}</p>
-              <p className="mt-0.5 truncate text-[11px] text-muted">{user.roleLabel}</p>
+              <p className="truncate text-xs font-bold text-white">{user.name}</p>
+              <p className="mt-0.5 truncate text-[11px] text-white/40">{user.roleLabel}</p>
             </div>
             <button
               onClick={logout}
               disabled={loggingOut}
-              className="grid h-8 w-8 place-items-center rounded-lg text-[#98a2b3] transition hover:bg-mist hover:text-navy disabled:opacity-50"
+              className="grid h-8 w-8 place-items-center rounded-lg text-white/40 transition hover:bg-white/10 hover:text-white disabled:opacity-50"
               aria-label="Keluar"
               title="Keluar"
             >

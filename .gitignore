@@ -14,3 +14,6 @@ coverage
 prisma/*.db
 prisma/*.db-journal
 *.tsbuildinfo
+
+# Berkas unggahan pengguna (lampiran bukti)
+public/uploads

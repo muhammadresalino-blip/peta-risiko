@@ -61,9 +61,9 @@ export default async function AppetitePage() {
                 </thead>
                 <tbody>
                   {gap.map((r) => (
-                    <tr key={r.id} className="border-b border-slate-50 last:border-0">
+                    <tr key={r.id} className="border-b border-line/60 last:border-0">
                       <td className="td">
-                        <Link href={`/risks/${r.id}`} className="font-semibold text-teal hover:text-[#117a76]">
+                        <Link href={`/risks/${r.id}`} className="font-semibold text-teal hover:text-navy">
                           {r.code}
                         </Link>
                       </td>
@@ -71,7 +71,7 @@ export default async function AppetitePage() {
                         <p className="font-medium text-ink">{r.description}</p>
                         <p className="text-xs text-muted">{r.unit?.name}</p>
                       </td>
-                      <td className="td text-[#536174]">{r.category}</td>
+                      <td className="td text-muted">{r.category}</td>
                       <td className="td">
                         <LevelBadge level={r.levelRes} score={r.scoreRes} />
                       </td>

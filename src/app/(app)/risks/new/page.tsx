@@ -28,7 +28,7 @@ export default async function NewRiskPage() {
       <>
         <PageHeader title="Catat risiko" />
         <div className="card-pad">
-          <p className="text-sm text-[#536174]">
+          <p className="text-sm text-muted">
             Unit kerja dan kategori risiko belum diatur. Hubungi Admin organisasi untuk melengkapinya di
             halaman Pengaturan.
           </p>

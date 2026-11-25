@@ -17,7 +17,7 @@ export function LevelBadge({ level, score }: { level: string; score?: number }) 
 
 export function StatusBadge({ status }: { status: string }) {
   return (
-    <span className={`badge ${STATUS_STYLES[status] ?? 'bg-[#F0F2F5] text-[#667085]'}`}>
+    <span className={`badge ${STATUS_STYLES[status] ?? 'bg-mist text-muted ring-line'}`}>
       {STATUS_LABEL[status] ?? status}
     </span>
   );
@@ -39,10 +39,10 @@ export function PageHeader({
   return (
     <header className="mb-6">
       {breadcrumb && (
-        <nav className="mb-2 flex items-center gap-1.5 text-xs text-[#8a96a6]">
+        <nav className="mb-2 flex items-center gap-1.5 text-xs text-muted">
           {breadcrumb.map((b, idx) => (
             <span key={`${b.label}-${idx}`} className="flex items-center gap-1.5">
-              {idx > 0 && <span className="text-[#c8d3dd]">/</span>}
+              {idx > 0 && <span className="text-muted/50">/</span>}
               {b.href ? (
                 <Link href={b.href} className="hover:text-navy">
                   {b.label}
@@ -84,9 +84,9 @@ export function StatCard({
   const accents: Record<string, string> = {
     slate: 'bg-mist text-blue',
     indigo: 'bg-teal-soft text-teal',
-    emerald: 'bg-[#E7F3ED] text-[#26734D]',
-    amber: 'bg-[#F8F1D9] text-[#8A6B16]',
-    rose: 'bg-[#F8E1E0] text-[#A33E3A]',
+    emerald: 'bg-risk-low/10 text-risk-low',
+    amber: 'bg-risk-medium/10 text-risk-medium',
+    rose: 'bg-risk-extreme/10 text-risk-extreme',
   };
   return (
     <div className="rounded-xl border border-line bg-white px-[18px] py-[17px]">
@@ -101,7 +101,7 @@ export function StatCard({
       <p className="data-value mt-3.5 text-[26px] font-extrabold leading-none text-navy">
         {value}
       </p>
-      {hint && <p className="mt-1.5 text-[11px] text-[#8a96a6]">{hint}</p>}
+      {hint && <p className="mt-1.5 text-[11px] text-muted">{hint}</p>}
     </div>
   );
 }
@@ -109,11 +109,11 @@ export function StatCard({
 export function EmptyState({ title, description, action }: { title: string; description: string; action?: ReactNode }) {
   return (
     <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
-      <div className="mb-3 grid h-11 w-11 place-items-center rounded-full bg-mist text-[#98a2b3]">
+      <div className="mb-3 grid h-11 w-11 place-items-center rounded-full bg-mist text-muted">
         <Inbox size={20} />
       </div>
       <p className="text-[13px] font-bold text-ink">{title}</p>
-      <p className="mt-1 max-w-sm text-xs leading-relaxed text-[#8a96a6]">{description}</p>
+      <p className="mt-1 max-w-sm text-xs leading-relaxed text-muted">{description}</p>
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -137,7 +137,7 @@ export function SectionCard({
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="font-display text-sm font-bold text-navy">{title}</h2>
-          {description && <p className="mt-1 text-[11px] leading-relaxed text-[#8a96a6]">{description}</p>}
+          {description && <p className="mt-1 text-[11px] leading-relaxed text-muted">{description}</p>}
         </div>
         {action}
       </div>

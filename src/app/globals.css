@@ -9,6 +9,7 @@
 :root {
   /* Brand */
   --navy-900: #142d4e;
+  --navy-800: #1a3557;
   --navy-700: #244c70;
   --teal-600: #168c87;
   --teal-50: #e9f4f2;
@@ -20,7 +21,7 @@
   --muted: #66758a;
   --foreground: #1d2939;
 
-  /* Risk levels */
+  /* Risk levels (Updated from design system) */
   --risk-low: #23865a;
   --risk-medium: #b7791f;
   --risk-high: #d36b32;
@@ -38,6 +39,7 @@
 
   /* Shadow */
   --shadow-card: 0 1px 3px rgba(16, 24, 40, 0.05);
+  --shadow-raised: 0 12px 36px rgba(20, 45, 78, 0.04);
 
   color-scheme: light;
 }
@@ -50,11 +52,16 @@
   --color-blue: var(--navy-700);
   --color-teal: var(--teal-600);
   --color-teal-soft: var(--teal-50);
+  --color-teal-light: #7fd3cd;
   --color-canvas: var(--background);
   --color-line: var(--border);
   --color-ink: var(--foreground);
   --color-muted: var(--muted);
   --color-mist: #f4f7f9;
+  --color-risk-low: var(--risk-low);
+  --color-risk-medium: var(--risk-medium);
+  --color-risk-high: var(--risk-high);
+  --color-risk-extreme: var(--risk-extreme);
 }
 
 html,

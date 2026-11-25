@@ -135,16 +135,16 @@ export function RiskActions(props: Props) {
           </button>
         )}
         {props.canDelete && props.status === 'DRAFT' && (
-          <button className="btn-ghost !text-rose-600 hover:!bg-rose-50" onClick={() => act('delete')} disabled={busy !== null}>
+          <button className="btn-ghost !text-risk-extreme hover:!bg-risk-extreme/10" onClick={() => act('delete')} disabled={busy !== null}>
             Hapus
           </button>
         )}
       </div>
 
-      {error && <p className="rounded-lg bg-rose-50 px-3 py-2 text-xs text-rose-700 ring-1 ring-rose-200">{error}</p>}
+      {error && <p className="rounded-lg bg-risk-extreme/10 px-3 py-2 text-xs text-risk-extreme ring-1 ring-risk-extreme/20">{error}</p>}
 
       {panel === 'reject' && (
-        <div className="rounded-xl border border-rose-200 bg-rose-50/60 p-4">
+        <div className="rounded-xl border border-risk-extreme/20 bg-risk-extreme/5 p-4">
           <label className="label" htmlFor="reject-note">
             Alasan penolakan
           </label>
@@ -161,8 +161,8 @@ export function RiskActions(props: Props) {
       )}
 
       {panel === 'review' && (
-        <div className="rounded-xl border border-[#cfe4e2] bg-teal-soft/60 p-4">
-          <p className="mb-3 text-xs text-[#536174]">
+        <div className="rounded-xl border border-teal/20 bg-teal-soft/60 p-4">
+          <p className="mb-3 text-xs text-muted">
             Penilaian ulang residual setelah pemantauan. Tanggal review berikutnya diatur otomatis tiga bulan.
           </p>
           <div className="grid grid-cols-2 gap-3">
